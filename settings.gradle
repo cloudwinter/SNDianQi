@@ -1,0 +1,2 @@
+rootProject.name='SNDianQi'
+include ':app'
