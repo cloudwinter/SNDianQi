@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.sn.dianqi.blue.BluetoothLeService;
+import com.sn.dianqi.core.AppUncaughtExceptionHandler;
 import com.sn.dianqi.file.FileUtils;
 import com.sn.dianqi.util.LogUtils;
 import com.sn.dianqi.util.Prefer;
@@ -72,6 +73,7 @@ public class MyApplication extends Application {
         LogUtils.e("---", "[MyApplication] onCreate");
         super.onCreate();
         instance = this;
+        AppUncaughtExceptionHandler.getInstance().init(this);
         initImageLoader();
         initFilePath();
         // Initializes Bluetooth adapter.
@@ -79,8 +81,8 @@ public class MyApplication extends Application {
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         x.Ext.init(this);
-initBugly();
-//默认英文
+        initBugly();
+        //默认英文
        // LocaleUtils.updateLocale(this, LocaleUtils.LOCALE_ENGLISH);
     }
 

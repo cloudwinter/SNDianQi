@@ -1,0 +1,364 @@
+package com.sn.dianqi.activity;
+
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.sn.dianqi.MyApplication;
+import com.sn.dianqi.R;
+import com.sn.dianqi.adapter.BlueDeviceListAdapter;
+import com.sn.dianqi.base.BaseActivity;
+import com.sn.dianqi.bean.DeviceBean;
+import com.sn.dianqi.blue.BluetoothLeService;
+import com.sn.dianqi.dialog.WaitDialog;
+import com.sn.dianqi.util.CountDownTimerUtils;
+import com.sn.dianqi.util.LogUtils;
+import com.sn.dianqi.util.Prefer;
+import com.sn.dianqi.util.ToastUtils;
+import com.sn.dianqi.view.TranslucentActionBar;
+
+import net.frakbot.jumpingbeans.JumpingBeans;
+
+import java.lang.ref.WeakReference;
+
+import androidx.annotation.Nullable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * 蓝牙搜索连接界面
+ */
+public class ConnectActivity extends BaseActivity implements TranslucentActionBar.ActionBarClickListener {
+
+
+    private final static String TAG = "ConnectActivity";
+
+    private static final long DURATION_MILL = 5000L;
+    //
+    private static final int MSG_STOP_SCAN = 102;
+    //
+    private static final int MSG_CONNECT_STATUS = 103;
+
+
+    @BindView(R.id.actionbar)
+    TranslucentActionBar titleBar;
+    @BindView(R.id.tv_try)
+    TextView textViewTry;
+    @BindView(R.id.tv_connect_time)
+    TextView textViewConnectTime;
+    @BindView(R.id.lv)
+    ListView listView;
+
+    // 自定义Adapter
+    private BlueDeviceListAdapter mBlueDeviceListAdapter;
+
+    //蓝牙service,负责后台的蓝牙服务
+    private BluetoothLeService mBluetoothLeService;
+    // 蓝牙适配器
+    private BluetoothAdapter mBluetoothAdapter;
+
+    // 加载中对话框
+    private WaitDialog mWaitDialog;
+
+    private ConnectHandler mConnectHandler;
+
+    // 点击选中的设备
+    private BluetoothDevice mSelectedBlueDevice;
+    private DeviceBean mSelectedDeviceBean;
+
+    // 当前搜索状态
+    private boolean mScanning;
+
+
+    @Override
+    public void onLeftClick() {
+        finish();
+    }
+
+    @Override
+    public void onRightClick() {
+        // do nothing
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mGattUpdateReceiver);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_connect);
+        ButterKnife.bind(this);
+        // 设置title
+        titleBar.setData(getString(R.string.blue_equipment), R.mipmap.ic_back, null, 0, null, this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            titleBar.setStatusBarHeight(getStatusBarHeight());
+        }
+
+        initView();
+
+        mConnectHandler = new ConnectHandler(this);
+        mWaitDialog = new WaitDialog(this);
+
+        // 启动蓝牙service
+        Intent blueServiceIntent = new Intent(ConnectActivity.this, BluetoothLeService.class);
+        bindService(blueServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        // 启动扫描
+        scanBlue(true);
+    }
+
+
+    private void initView() {
+        textViewTry.setOnClickListener(mSearchBlueClickListener);
+
+        mBlueDeviceListAdapter = new BlueDeviceListAdapter(this);
+        listView.setAdapter(mBlueDeviceListAdapter);
+        listView.setOnItemClickListener(mItemClickListener);
+
+        // 获取手机本地的蓝牙适配器
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+    }
+
+    /**
+     * 蓝牙搜索
+     *
+     * @param enable true开始，false停止
+     */
+    private void scanBlue(boolean enable) {
+        if (enable) {
+            LogUtils.e(TAG, "==开始扫描蓝牙设备==", "begin.....................");
+            // 5S后停止
+            mConnectHandler.sendEmptyMessageDelayed(MSG_STOP_SCAN, DURATION_MILL);
+            // 倒计时
+            CountDownTimerUtils countDownTimer = new CountDownTimerUtils(textViewConnectTime, DURATION_MILL, 1000L);
+            countDownTimer.start();
+            mScanning = true;
+            textViewTry.setText(getString(R.string.searching));
+            JumpingBeans.with(textViewTry).appendJumpingDots().build();
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
+        } else {
+            LogUtils.e(TAG, "==停止扫描蓝牙设备==", "stoping................");
+            mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            textViewTry.setText(getString(R.string.search_blue_equipment));
+        }
+    }
+
+    /**
+     * 去连接
+     */
+    private void connect() {
+        // Automatically connects to the device upon successful start-up
+        // initialization.
+        // 根据蓝牙地址，连接设备
+        LogUtils.e(TAG, "==根据蓝牙地址，连接设备==", "开始连接目标设备");
+        //启动连接动画
+        mWaitDialog.setCanceledOnTouchOutside(false);
+        mWaitDialog.show();
+        mBluetoothLeService.disconnect();
+        mBluetoothLeService.connect(mSelectedBlueDevice.getAddress());
+    }
+
+
+    /**
+     * 断开连接
+     */
+    private void disConnect() {
+        showDialog(getString(R.string.dialog_title_disconnect),
+                getString(R.string.dialog_negetive), getString(R.string.dialog_positive),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 断开连接
+                        mBluetoothLeService.disconnect();
+                    }
+                });
+    }
+
+
+    /**
+     *
+     */
+    private static class ConnectHandler extends Handler {
+
+        private WeakReference<ConnectActivity> reference;
+
+        public ConnectHandler(ConnectActivity activity) {
+            reference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ConnectActivity activity = reference.get();
+            if (activity == null || activity.isFinishing()) {
+                LogUtils.i(TAG, "ConnectActivity 已被销毁");
+                return;
+            }
+            switch (msg.what) {
+                case MSG_STOP_SCAN:
+                    // 停止扫描
+                    activity.scanBlue(false);
+                    break;
+                case MSG_CONNECT_STATUS:
+                    activity.mBlueDeviceListAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    }
+
+
+    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mSelectedBlueDevice = mBlueDeviceListAdapter.getDevice(position);
+            mSelectedDeviceBean = (DeviceBean) mBlueDeviceListAdapter.getItem(position);
+            if (mSelectedDeviceBean.isConnected()) {
+                // 断开连接
+                disConnect();
+            } else {
+                // 去连接
+                connect();
+            }
+        }
+    };
+
+
+    /**
+     * 蓝牙搜索按钮点击事件
+     */
+    private View.OnClickListener mSearchBlueClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!mScanning) {
+                scanBlue(true);
+            }
+        }
+    };
+
+
+    /**
+     * 蓝牙扫描回调函数 实现扫描蓝牙设备，回调蓝牙BluetoothDevice，可以获取name MAC等信息
+     */
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+        @Override
+        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+            LogUtils.i(TAG, "搜索到蓝牙设备信息：" + new Gson().toJson(device));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (device != null) {
+                        /* 將扫描到设备的信息输出到listview的适配器 */
+                        mBlueDeviceListAdapter.addDevice(device);
+                    }
+                }
+            });
+        }
+    };
+
+
+    /* BluetoothLeService绑定的回调函数 */
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            LogUtils.d(TAG, "BluetoothLeService 已启动");
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            MyApplication.getInstance().mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+                LogUtils.e("找不到蓝牙", "Unable to initialize Bluetooth");
+                finish();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            LogUtils.i(TAG, "BluetoothLeService 已断开");
+        }
+    };
+
+
+    /* 意图过滤器 */
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
+
+    /**
+     * 广播接收器，负责接收BluetoothLeService类发送的数据
+     */
+    private BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action))//Gatt连接成功
+            {
+                LogUtils.e(TAG, "==更新连接状态 已连接==");
+                Prefer.getInstance().setCurrentDevice(mSelectedBlueDevice.getAddress());
+                mWaitDialog.dismiss();
+                //更新连接状态
+                mSelectedDeviceBean.setConnected(true);
+                mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) { //Gatt连接失败
+                mWaitDialog.dismiss();
+                if (mSelectedDeviceBean != null && mSelectedDeviceBean.isConnected()) {
+                    LogUtils.e(TAG, "==更新连接状态 断开连接==");
+                    ToastUtils.showToast(ConnectActivity.this, "已断开连接");
+                    Prefer.getInstance().setCurrentDevice("");
+                    mSelectedDeviceBean.setConnected(false);
+                    mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
+                } else {
+                    LogUtils.e(TAG, "==更新连接状态 连接失败==");
+                    showDialog("连接失败,请尝试重新连接", "", "朕知道了", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // do nothing
+                        }
+                    });
+                }
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //发现GATT服务器
+                // Show all the supported services and characteristics on the
+                // user interface.
+                LogUtils.i(TAG,"ACTION_GATT_SERVICES_DISCOVERED");
+            }
+        }
+    };
+
+
+}

@@ -153,9 +153,9 @@ public class Prefer {
     }
 
     //蓝牙当前地址
-    public void setCurrentDecice(String decice) {
+    public void setCurrentDevice(String deviceAddress) {
         SharedPreferences.Editor editor = mPref.edit();
-        editor.putString(KEY_DECICE, decice);
+        editor.putString(KEY_DECICE, deviceAddress);
         editor.commit();
     }
 
@@ -176,6 +176,6 @@ public class Prefer {
 
         //重新写入
 //        setBleStatus(setBleStatus);
-        setCurrentDecice(currentDecice);
+        setCurrentDevice(currentDecice);
     }
 }
