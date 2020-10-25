@@ -135,7 +135,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         fragments.add(new DengguangFragment());
         tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(tabPagerAdapter);
-        viewPager.setScroll(false);
+        viewPager.setScroll(true);
         viewPager.setOffscreenPageLimit(3);
     }
 

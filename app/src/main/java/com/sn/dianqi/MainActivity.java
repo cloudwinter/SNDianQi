@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.text_enter:
                 // 跳转到蓝牙搜索和连接界面
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                Intent intent = new Intent(MainActivity.this, ConnectActivity.class);
                 startActivity(intent);
                 break;
         }

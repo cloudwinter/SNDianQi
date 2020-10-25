@@ -97,6 +97,7 @@
             android:layout_width="102dp"
             android:layout_height="102dp"
             app:title="@string/kandianshi"
+            app:icon="@mipmap/ic_kandianshi_xiao"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
             app:bgselected="@mipmap/ic_anjian_yuan_selected"
             />
@@ -111,6 +112,7 @@
             android:id="@+id/view_lingyali"
             android:layout_width="102dp"
             android:layout_height="102dp"
+            app:icon="@mipmap/ic_lingyali_xiao"
             app:title="@string/lingyali"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
             app:bgselected="@mipmap/ic_anjian_yuan_selected"
@@ -132,6 +134,7 @@
             android:layout_width="102dp"
             android:layout_height="102dp"
             app:title="@string/zhihan"
+            app:icon="@mipmap/ic_zhihan_xiao"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
             app:bgselected="@mipmap/ic_anjian_yuan_selected"
             />
@@ -147,6 +150,7 @@
             android:layout_width="102dp"
             android:layout_height="102dp"
             app:title="@string/fuyuan"
+            app:icon="@mipmap/ic_fuyuan_xiao"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
             app:bgselected="@mipmap/ic_anjian_yuan_selected"
             />

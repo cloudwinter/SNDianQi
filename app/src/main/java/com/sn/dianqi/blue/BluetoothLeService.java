@@ -216,7 +216,7 @@ public class BluetoothLeService extends Service {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data) {
                 stringBuilder.append(String.format("%02X ", byteChar));
-                LogUtils.e("==具体的数据==", "" + byteChar);
+                //LogUtils.e("==具体的数据==", "" + byteChar);
             }
             LogUtils.e("==从特征值获取返回的数据==", "" + stringBuilder);
             intent.putExtra(EXTRA_DATA, "" + stringBuilder);
@@ -396,7 +396,7 @@ public class BluetoothLeService extends Service {
             return;
         }
         mBluetoothGatt.writeCharacteristic(characteristic);
-        LogUtils.e("==写入特征值==", "" + characteristic);
+        //LogUtils.e("==写入特征值==", "" + characteristic);
     }
 
     // 读取RSSi

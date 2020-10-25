@@ -3,6 +3,9 @@ package com.sn.dianqi.activity;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -40,10 +43,15 @@ import com.sn.dianqi.view.TranslucentActionBar;
 import net.frakbot.jumpingbeans.JumpingBeans;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sn.dianqi.MyApplication.HEART_RATE_MEASUREMENT;
 
 /**
  * 蓝牙搜索连接界面
@@ -58,6 +66,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     private static final int MSG_STOP_SCAN = 102;
     //
     private static final int MSG_CONNECT_STATUS = 103;
+    // 发现服务并设置特征值
+    private static final int MSG_GATT_SERVICE_DISCOVERY = 104;
 
 
     @BindView(R.id.actionbar)
@@ -76,6 +86,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     private BluetoothLeService mBluetoothLeService;
     // 蓝牙适配器
     private BluetoothAdapter mBluetoothAdapter;
+    // 蓝牙特征值
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics;
 
     // 加载中对话框
     private WaitDialog mWaitDialog;
@@ -234,6 +246,12 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 case MSG_CONNECT_STATUS:
                     activity.mBlueDeviceListAdapter.notifyDataSetChanged();
                     break;
+                case MSG_GATT_SERVICE_DISCOVERY:
+                    if (activity.mSelectedDeviceBean.isConnected()) {
+                        Intent intent = new Intent(activity, HomeActivity.class);
+                        activity.startActivity(intent);
+                    }
+                    break;
             }
         }
     }
@@ -336,6 +354,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 //更新连接状态
                 mSelectedDeviceBean.setConnected(true);
                 mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
+                // FIXME 测试时使用，连接真实蓝牙时去除
+                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) { //Gatt连接失败
                 mWaitDialog.dismiss();
                 if (mSelectedDeviceBean != null && mSelectedDeviceBean.isConnected()) {
@@ -357,10 +377,70 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //发现GATT服务器
                 // Show all the supported services and characteristics on the
                 // user interface.
-                LogUtils.i(TAG,"ACTION_GATT_SERVICES_DISCOVERED");
+                LogUtils.i("==获取设备的所有蓝牙服务==", "" + mBluetoothLeService.getSupportedGattServices());
+                displayGattServices(mBluetoothLeService.getSupportedGattServices());
+                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
             }
         }
     };
+
+
+    /**
+     * @param
+     * @return void
+     * @throws
+     * @Title: displayGattServices
+     * @Description: TODO(处理蓝牙服务)
+     */
+    private void displayGattServices(List<BluetoothGattService> gattServices) {
+        if (gattServices == null)
+            return;
+        String uuid = null;
+        String unknownServiceString = "unknown_service";
+        String unknownCharaString = "unknown_characteristic";
+        // 服务数据,可扩展下拉列表的第一级数据
+        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
+        // 特征数据（隶属于某一级服务下面的特征值集合）
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<ArrayList<HashMap<String, String>>>();
+        // 部分层次，所有特征值集合
+        mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+        // Loops through available GATT Services.
+        for (BluetoothGattService gattService : gattServices) {
+            // 获取服务列表
+            HashMap<String, String> currentServiceData = new HashMap<String, String>();
+            uuid = gattService.getUuid().toString();
+            // 查表，根据该uuid获取对应的服务名称。SampleGattAttributes这个表需要自定义。
+            gattServiceData.add(currentServiceData);
+            LogUtils.e("=获取服务列表中 Service Uuid==", "" + uuid + " instanceid=" + gattService.getInstanceId() + " type=" + gattService.getType());
+            // 从当前循环所指向的服务中读取特征值列表
+            List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+
+            // Loops through available Characteristics.
+            // 对于当前循环所指向的服务中的每一个特征值
+            for (final BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+                LogUtils.e("=获取特征值列表中 chara Uuid==", "" + uuid + " Properties=" + gattCharacteristic.getProperties());
+                uuid = gattCharacteristic.getUuid().toString();
+                if (gattCharacteristic.getUuid().toString().equals(HEART_RATE_MEASUREMENT)) {
+                    MyApplication.getInstance().mBluetoothLeService = mBluetoothLeService;
+                    MyApplication.getInstance().gattCharacteristic = gattCharacteristic;
+
+                    LogUtils.e("==蓝牙特征值1==", "" + MyApplication.getInstance().gattCharacteristic.toString());
+                    // 接受Characteristic被写的通知,收到蓝牙模块的数据后会触发mOnDataAvailable.onCharacteristicWrite()
+                    mBluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
+
+                    // 设置数据内容
+                    // 往蓝牙模块写入数据
+                    mBluetoothLeService.writeCharacteristic(gattCharacteristic);
+                }
+                List<BluetoothGattDescriptor> descriptors = gattCharacteristic.getDescriptors();
+                for (BluetoothGattDescriptor descriptor : descriptors) {
+                    System.out.println("---descriptor UUID:" + descriptor.getUuid());
+                    // 获取特征值的描述
+                    mBluetoothLeService.getCharacteristicDescriptor(descriptor);
+                }
+            }
+        }
+    }
 
 
 }
