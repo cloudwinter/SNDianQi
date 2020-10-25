@@ -34,4 +34,23 @@
     <string name="anmo">按摩</string>
     <string name="dengguang">灯光</string>
 
+    <!-- 快捷 -->
+    <string name="jiyi1">记忆1</string>
+    <string name="jiyi2">记忆2</string>
+    <string name="kandianshi">看电视</string>
+    <string name="lingyali">零压力</string>
+    <string name="zhihan">止鼾</string>
+    <string name="fuyuan">复原</string>
+
+
+    <!-- 微调 -->
+    <string name="beibutiaozheng">背部调整</string>
+    <string name="tuibutiaozheng">腿部调整</string>
+
+
+    <!-- 灯光 -->
+    <string name="tenfenzhong">10分钟</string>
+    <string name="eightxiaoshi">8小时</string>
+    <string name="tentxiaoshi">10小时</string>
+
 </resources>

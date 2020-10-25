@@ -13,8 +13,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
 
-    private FragmentManager fragmentManager;
-
     private List<BaseFragment> fragmentList;
 
 
@@ -27,11 +25,14 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return null;
+        return fragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-        return 0;
+        if (fragmentList.isEmpty()) {
+            return 0;
+        }
+        return fragmentList.size();
     }
 }

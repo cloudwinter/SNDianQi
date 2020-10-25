@@ -152,6 +152,18 @@ public class Prefer {
         return mPref.getString(KEY_BLESTATUS, "未连接");
     }
 
+    /**
+     * 判断蓝牙是否连接
+     * @return
+     */
+    public boolean isBleConnected() {
+        String status = mPref.getString(KEY_BLESTATUS, "未连接");
+        if (status.equals("未连接")) {
+            return false;
+        }
+        return true;
+    }
+
     //蓝牙当前地址
     public void setCurrentDevice(String deviceAddress) {
         SharedPreferences.Editor editor = mPref.edit();

@@ -1,12 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="I am kuaijie"
-        ></TextView>
+    <!-- 顶部 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="234dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/bg_anjian_top"
+        android:gravity="center">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="@mipmap/ic_anjian_yuan_da">
+
+            <ImageView
+                android:id="@+id/img_anjian_top_icon"
+                android:layout_width="102dp"
+                android:layout_height="102dp"
+                android:background="@mipmap/ic_kandianshi_da"
+                android:layout_marginTop="40dp"/>
+
+            <TextView
+                android:id="@+id/text_anjian_top_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="看电视"
+                android:textColor="@color/FA3008"
+                android:textSize="@dimen/sp_14">
+            </TextView>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <!-- 记忆区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+
+        <com.sn.dianqi.view.JiyiView
+            android:id="@+id/view_jiyi1"
+            android:layout_width="162dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:title="@string/jiyi1"
+            app:bgnormal="@mipmap/ic_anjian_tuoyuan_normal"
+            app:bgselected="@mipmap/ic_anjian_tuoyuan_selected"
+            />
+
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+        <com.sn.dianqi.view.JiyiView
+            android:id="@+id/view_jiyi2"
+            android:layout_width="162dp"
+            android:layout_height="match_parent"
+            android:background="@mipmap/ic_anjian_tuoyuan_normal"
+            android:orientation="horizontal"
+            app:title="@string/jiyi2"
+            app:bgnormal="@mipmap/ic_anjian_tuoyuan_normal"
+            app:bgselected="@mipmap/ic_anjian_tuoyuan_selected"/>
+
+
+    </LinearLayout>
+
+    <!-- 以下按键区域-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="102dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="69dp"
+        android:layout_marginRight="69dp"
+        android:orientation="horizontal">
+
+        <com.sn.dianqi.view.AnjianYuanView
+            android:id="@+id/view_kandianshi"
+            android:layout_width="102dp"
+            android:layout_height="102dp"
+            app:title="@string/kandianshi"
+            app:bgnormal="@mipmap/ic_anjian_yuan_normal"
+            app:bgselected="@mipmap/ic_anjian_yuan_selected"
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+        <com.sn.dianqi.view.AnjianYuanView
+            android:id="@+id/view_lingyali"
+            android:layout_width="102dp"
+            android:layout_height="102dp"
+            app:title="@string/lingyali"
+            app:bgnormal="@mipmap/ic_anjian_yuan_normal"
+            app:bgselected="@mipmap/ic_anjian_yuan_selected"
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="102dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="69dp"
+        android:layout_marginRight="69dp"
+        android:orientation="horizontal">
+
+        <com.sn.dianqi.view.AnjianYuanView
+            android:id="@+id/view_zhihan"
+            android:layout_width="102dp"
+            android:layout_height="102dp"
+            app:title="@string/zhihan"
+            app:bgnormal="@mipmap/ic_anjian_yuan_normal"
+            app:bgselected="@mipmap/ic_anjian_yuan_selected"
+            />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+        <com.sn.dianqi.view.AnjianYuanView
+            android:id="@+id/view_fuyuan"
+            android:layout_width="102dp"
+            android:layout_height="102dp"
+            app:title="@string/fuyuan"
+            app:bgnormal="@mipmap/ic_anjian_yuan_normal"
+            app:bgselected="@mipmap/ic_anjian_yuan_selected"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

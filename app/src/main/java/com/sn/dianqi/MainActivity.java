@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sn.dianqi.activity.ConnectActivity;
+import com.sn.dianqi.activity.HomeActivity;
 import com.sn.dianqi.base.BaseActivity;
 import com.sn.dianqi.common.Constants;
 import com.sn.dianqi.util.PreferenceUtil;
@@ -63,7 +64,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.text_enter:
                 // 跳转到蓝牙搜索和连接界面
-                Intent intent = new Intent(MainActivity.this, ConnectActivity.class);
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
                 break;
         }

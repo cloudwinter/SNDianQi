@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="title" format="reference|string" />
+    <attr name="bgnormal" format="reference" />
+    <attr name="bgselected" format="reference" />
+
+
+    <declare-styleable name="JiyiView">
+        <attr name="title" />
+        <attr name="bgnormal" />
+        <attr name="bgselected" />
+    </declare-styleable>
+
+    <declare-styleable name="AnjianYuanView">
+        <attr name="title" />
+        <attr name="icon" format="reference" />
+        <attr name="bgnormal" />
+        <attr name="bgselected" />
+    </declare-styleable>
+</resources>

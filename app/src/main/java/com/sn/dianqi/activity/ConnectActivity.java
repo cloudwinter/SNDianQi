@@ -331,6 +331,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
             {
                 LogUtils.e(TAG, "==更新连接状态 已连接==");
                 Prefer.getInstance().setCurrentDevice(mSelectedBlueDevice.getAddress());
+                Prefer.getInstance().setBleStatus("已连接");
                 mWaitDialog.dismiss();
                 //更新连接状态
                 mSelectedDeviceBean.setConnected(true);
@@ -341,6 +342,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     LogUtils.e(TAG, "==更新连接状态 断开连接==");
                     ToastUtils.showToast(ConnectActivity.this, "已断开连接");
                     Prefer.getInstance().setCurrentDevice("");
+                    Prefer.getInstance().setBleStatus("未连接");
                     mSelectedDeviceBean.setConnected(false);
                     mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
                 } else {

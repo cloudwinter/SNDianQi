@@ -33,4 +33,22 @@
     <string name="anmo">MASSAGE</string>
     <string name="dengguang">LIGHT</string>
 
+    <!-- 快捷 -->
+    <string name="jiyi1">Memory1</string>
+    <string name="jiyi2">Memory2</string>
+    <string name="kandianshi">Watch TV</string>
+    <string name="lingyali">Zero Gravity</string>
+    <string name="zhihan">Anti Snore</string>
+    <string name="fuyuan">Flat Bed</string>
+
+    <!-- 微调 -->
+    <string name="beibutiaozheng">BACK</string>
+    <string name="tuibutiaozheng">LEG</string>
+
+
+    <!-- 灯光 -->
+    <string name="tenfenzhong">10Mins</string>
+    <string name="eightxiaoshi">8Hours</string>
+    <string name="tentxiaoshi">10Hours</string>
+
 </resources>

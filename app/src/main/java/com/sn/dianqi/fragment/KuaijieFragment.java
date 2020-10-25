@@ -1,6 +1,7 @@
 package com.sn.dianqi.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,13 @@ import androidx.annotation.Nullable;
  */
 public class KuaijieFragment extends BaseFragment {
 
+
+    public static final String TAG = "KuaijieFragment";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_kuaijie, container, false);
         return view;
     }
