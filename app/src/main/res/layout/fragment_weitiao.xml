@@ -31,7 +31,7 @@
                 android:id="@+id/text_anjian_top_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="背部调整"
+                android:text="@string/beibutiaozheng"
                 android:textColor="@color/FA3008"
                 android:textSize="@dimen/sp_14">
             </TextView>
@@ -51,18 +51,20 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/ll_beibu_top"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical">
 
             <ImageView
+                android:id="@+id/img_beibu_sanjiao_top"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginLeft="50dp"
-                android:src="@mipmap/ic_sanjiao_top_normal" />
-        </RelativeLayout>
+                android:background="@drawable/bg_sanjiao_top_selector" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -85,6 +87,7 @@
 
 
         <LinearLayout
+            android:id="@+id/ll_beibu_bottom"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -92,10 +95,11 @@
             android:gravity="center_vertical">
 
             <ImageView
+                android:id="@+id/img_beibu_sanjiao_bottom"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginRight="50dp"
-                android:src="@mipmap/ic_sanjiao_bottom_normal"
+                android:background="@drawable/bg_sanjiao_bottom_selector"
                 android:layout_gravity="end"
                 />
         </LinearLayout>
@@ -112,18 +116,20 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/ll_tuibu_top"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical">
 
             <ImageView
+                android:id="@+id/img_tuibu_sanjiao_top"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginLeft="50dp"
-                android:src="@mipmap/ic_sanjiao_top_normal" />
-        </RelativeLayout>
+                android:background="@drawable/bg_sanjiao_top_selector" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -146,6 +152,7 @@
 
 
         <LinearLayout
+            android:id="@+id/ll_tuibu_bottom"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -153,10 +160,11 @@
             android:gravity="center_vertical">
 
             <ImageView
+                android:id="@+id/img_tuibu_sanjiao_bottom"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginRight="50dp"
-                android:src="@mipmap/ic_sanjiao_bottom_normal"
+                android:background="@drawable/bg_sanjiao_bottom_selector"
                 android:layout_gravity="end"
                 />
         </LinearLayout>

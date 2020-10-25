@@ -19,6 +19,7 @@ import android.util.Log;
 
 
 import com.sn.dianqi.util.LogUtils;
+import com.sn.dianqi.util.Prefer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -239,6 +240,16 @@ public class BluetoothLeService extends Service {
     public boolean onUnbind(Intent intent) {
         close();
         return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // 断开连接
+        disconnect();
+        // 关闭
+        close();
+        Prefer.getInstance().setBleStatus("未连接");
     }
 
     private final IBinder mBinder = new LocalBinder();

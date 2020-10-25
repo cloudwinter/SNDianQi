@@ -71,6 +71,7 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume: ");
         getActivity().registerReceiver(mKuaijieReceiver, makeGattUpdateIntentFilter());
         characteristic = MyApplication.getInstance().gattCharacteristic;
         askStatus();
@@ -157,12 +158,10 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
         Log.i(TAG, "sendBlueCmd: " + cmd);
         // 判断蓝牙是否连接
         if (!Prefer.getInstance().isBleConnected()) {
-            // FIXME 设置string
-            ToastUtils.showToast(getContext(), "蓝牙未连接");
+            ToastUtils.showToast(getContext(), getString(R.string.device_no_connected));
             LogUtils.i(TAG, "sendBlueCmd -> 蓝牙未连接");
             return;
         }
-        byte[] bytes = BlueUtils.StringToBytes(cmd);
         characteristic.setValue(BlueUtils.StringToBytes(cmd));
         MyApplication.getInstance().mBluetoothLeService.writeCharacteristic(characteristic);
     }

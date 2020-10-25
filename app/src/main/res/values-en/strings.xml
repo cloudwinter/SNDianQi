@@ -47,8 +47,11 @@
 
 
     <!-- 灯光 -->
+    <string name="dengguangshijian">Lighting time</string>
     <string name="tenfenzhong">10Mins</string>
     <string name="eightxiaoshi">8Hours</string>
     <string name="tentxiaoshi">10Hours</string>
+
+    <string name="device_no_connected">Device Not Connected</string>
 
 </resources>

@@ -250,6 +250,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     if (activity.mSelectedDeviceBean.isConnected()) {
                         Intent intent = new Intent(activity, HomeActivity.class);
                         activity.startActivity(intent);
+                        activity.finish();
                     }
                     break;
             }
@@ -355,7 +356,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 mSelectedDeviceBean.setConnected(true);
                 mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
                 // FIXME 测试时使用，连接真实蓝牙时去除
-                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
+//                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) { //Gatt连接失败
                 mWaitDialog.dismiss();
                 if (mSelectedDeviceBean != null && mSelectedDeviceBean.isConnected()) {

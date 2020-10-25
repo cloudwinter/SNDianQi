@@ -1,6 +1,8 @@
 package com.sn.dianqi.activity;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,6 +28,10 @@ public class WebActivity extends BaseActivity implements TranslucentActionBar.Ac
         setContentView(R.layout.activity_web);
         ButterKnife.bind(this);
         actionBar.setData(getString(R.string.privacy_policy),R.mipmap.ic_back,null, 0, null, this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            actionBar.setStatusBarHeight(getStatusBarHeight());
+        }
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportMultipleWindows(true);
