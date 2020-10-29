@@ -66,4 +66,8 @@
 
     <string name="device_disconnect">Device disConnected please reconnected</string>
 
+    <string name="debug_switch">debug switch</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+
 </resources>

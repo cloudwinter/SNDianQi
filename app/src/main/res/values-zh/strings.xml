@@ -63,4 +63,8 @@
 
     <string name="device_disconnect">设备已断开，请重新连接</string>
 
+    <string name="debug_switch">调试开关</string>
+    <string name="open">开关</string>
+    <string name="close">关闭</string>
+
 </resources>

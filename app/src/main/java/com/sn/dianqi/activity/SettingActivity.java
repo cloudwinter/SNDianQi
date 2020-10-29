@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sn.dianqi.R;
 import com.sn.dianqi.base.BaseActivity;
 import com.sn.dianqi.dialog.LanguageDialog;
+import com.sn.dianqi.view.LoggerView;
 import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.view.TranslucentActionBar;
 
@@ -19,6 +20,8 @@ import java.util.Locale;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sn.dianqi.BuildConfig.Debuggable;
 
 public class SettingActivity extends BaseActivity implements TranslucentActionBar.ActionBarClickListener, View.OnClickListener {
 
@@ -40,6 +43,10 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
     LinearLayout llVersion;
     @BindView(R.id.ll_privacy)
     LinearLayout llPrivacy;
+
+    @BindView(R.id.ll_debug)
+    LinearLayout llDebug;
+
 
     @Override
     public void onLeftClick() {
@@ -70,6 +77,10 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
         llConnect.setOnClickListener(this);
         llLanguage.setOnClickListener(this);
         llPrivacy.setOnClickListener(this);
+        llDebug.setOnClickListener(this);
+        if (Debuggable) {
+            llDebug.setVisibility(View.VISIBLE);
+        }
         // 获取当前系统的语言
         Locale curLocale = getResources().getConfiguration().locale;
         //通过Locale的equals方法，判断出当前语言环境
@@ -105,7 +116,9 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
                 Intent webIntent = new Intent(SettingActivity.this, WebActivity.class);
                 startActivity(webIntent);
                 break;
-
+            case R.id.ll_debug:
+                LoggerView.me.loggerSwitch();
+                break;
         }
     }
 }

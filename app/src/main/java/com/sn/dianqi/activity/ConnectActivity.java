@@ -309,9 +309,9 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     if (device != null) {
                         // 发送给客户时需要加上
 
-//                        if (!device.getName().contains("QMS2") && !device.getName().contains("QMS-MQ")) {
-//                            return;
-//                        }
+                        if (!device.getName().contains("QMS2") && !device.getName().contains("QMS-MQ")) {
+                            return;
+                        }
 
                         String latelyConnectedDevice = Prefer.getInstance().getLatelyConnectedDevice();
                         if (device.getAddress().equals(latelyConnectedDevice)) {
@@ -396,7 +396,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 mSelectedDeviceBean.setConnected(true);
                 mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
                 // FIXME 测试时使用，连接真实蓝牙时去除
-                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
+//                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) { //Gatt连接失败
                 mWaitDialog.dismiss();
                 if (mSelectedDeviceBean != null && mSelectedDeviceBean.isConnected()) {

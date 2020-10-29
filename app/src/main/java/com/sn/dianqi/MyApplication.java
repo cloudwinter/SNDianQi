@@ -23,6 +23,7 @@ import com.sn.dianqi.blue.BluetoothLeService;
 import com.sn.dianqi.core.AppUncaughtExceptionHandler;
 import com.sn.dianqi.file.FileUtils;
 import com.sn.dianqi.util.LogUtils;
+import com.sn.dianqi.view.LoggerView;
 import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.util.ScreenUtils;
 import com.tencent.bugly.Bugly;
@@ -81,7 +82,12 @@ public class MyApplication extends Application {
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         x.Ext.init(this);
+
+        // 初始化Bugly
         initBugly();
+
+        // 初始化LoggerView
+        LoggerView.init(this);
         //默认英文
        // LocaleUtils.updateLocale(this, LocaleUtils.LOCALE_ENGLISH);
     }
