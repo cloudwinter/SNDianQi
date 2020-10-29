@@ -1,6 +1,10 @@
 package com.sn.dianqi.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +18,13 @@ import com.sn.dianqi.R;
 import com.sn.dianqi.adapter.TabPagerAdapter;
 import com.sn.dianqi.base.BaseActivity;
 import com.sn.dianqi.base.BaseFragment;
+import com.sn.dianqi.blue.BluetoothLeService;
 import com.sn.dianqi.fragment.DengguangFragment;
 import com.sn.dianqi.fragment.KuaijieFragment;
 import com.sn.dianqi.fragment.WeitiaoFragment;
+import com.sn.dianqi.util.LogUtils;
+import com.sn.dianqi.util.Prefer;
+import com.sn.dianqi.util.ToastUtils;
 import com.sn.dianqi.view.NoScrollViewPager;
 import com.sn.dianqi.view.TranslucentActionBar;
 
@@ -28,6 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener, TranslucentActionBar.ActionBarClickListener {
+
+    public static final String TAG = "HomeActivity";
 
     // 设置tab个数
     private final static int tabCount = 3;
@@ -94,11 +104,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mGattUpdateReceiver);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -176,4 +197,31 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 break;
         }
     }
+
+
+    /* 意图过滤器 */
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        return intentFilter;
+    }
+
+
+    /**
+     * 广播接收器，负责接收BluetoothLeService类发送的数据
+     */
+    private BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            LogUtils.i(TAG, "监听到蓝牙状态 ：" + action);
+            if (action == BluetoothLeService.ACTION_GATT_DISCONNECTED) {
+                // 监听到蓝牙已断开
+                LogUtils.e(TAG, "监听到蓝牙状态 ：已断开");
+                Prefer.getInstance().setBleStatus("未连接");
+                ToastUtils.showToast(HomeActivity.this,R.string.device_disconnect);
+            }
+        }
+    };
 }

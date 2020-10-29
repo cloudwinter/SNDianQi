@@ -9,7 +9,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         ndk {
             // 设置支持的SO库架构
@@ -19,10 +19,35 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
+
+    signingConfigs {
+        debug {
+            storeFile file('./keystore/lykj_release.jks')
+            storePassword '123456'
+            keyAlias 'lykj'
+            keyPassword '123456'
+        }
         release {
+            storeFile file('./keystore/lykj_release.jks')
+            storePassword '123456'
+            keyAlias 'lykj'
+            keyPassword '123456'
+            v2SigningEnabled false
+
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "Debuggable", "true"
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            buildConfigField "boolean", "Debuggable", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

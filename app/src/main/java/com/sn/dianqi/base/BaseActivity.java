@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.sn.dianqi.MyApplication;
 import com.sn.dianqi.common.Constants;
+import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.util.PreferenceUtil;
 
 import java.util.Locale;
@@ -35,7 +36,7 @@ public class BaseActivity extends AppCompatActivity {
         //初始化PreferenceUtil
         PreferenceUtil.init(this);
         //根据上次的语言设置，重新设置语言
-        switchLanguage(PreferenceUtil.getString(Constants.SharePre.KEY_LANGUAGE, "zh"));
+        switchLanguage(Prefer.getInstance().getSelectedLanguage());
     }
 
     @Override
@@ -126,6 +127,6 @@ public class BaseActivity extends AppCompatActivity {
         resources.updateConfiguration(config, dm);
 
         //保存设置语言的类型
-        PreferenceUtil.commitString("language", language);
+        //PreferenceUtil.commitString("language", language);
     }
 }

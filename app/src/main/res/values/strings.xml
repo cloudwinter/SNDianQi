@@ -1,13 +1,21 @@
 <resources>
-    <string name="app_name">SNDianQi</string>
+    <string name="app_name">Sweet Night</string>
+
+    <!-- common -->
+    <string name="exit">Press the back key again to exit the app</string>
+
+
+
     <string name="text_enter">Enter</string>
     <string name="blue_equipment">Equipment</string>
     <string name="search_blue_equipment">Scanning Nearby Equipment</string>
     <string name="searching">searching...</string>
 
+    <string name="connecting">connecting...</string>
     <string name="please_wait">Please later...</string>
     
     <!-- dialog -->
+    <string name="connected_failed">The connection failed. Please try to reconnect</string>
     <string name="dialog_title_disconnect">Disconnected or not</string>
     <string name="dialog_negetive">cancel</string>
     <string name="dialog_positive">sure</string>
@@ -54,5 +62,8 @@
     <string name="tentxiaoshi">10Hours</string>
 
     <string name="device_no_connected">Device Not Connected</string>
+
+
+    <string name="device_disconnect">Device disConnected please reconnected</string>
 
 </resources>

@@ -27,6 +27,7 @@ public class Prefer {
     private final String KEY_BLESTATUS = "KEY_BLESTATUS";
     private final String KEY_NEEDGUIDE = "KEY_NEEDGUIDE";
     private final String KEY_DECICE = "KEY_DECICE";
+    private final String KEY_LANGUAGE = "KEY_LANGUAGE";
 
     public static Prefer getInstance() {
         if (null == mInstance) {
@@ -38,6 +39,26 @@ public class Prefer {
     private Prefer() {
         mPref = MyApplication.getInstance().getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
     }
+
+
+    /**
+     * zh/en
+     * @param language
+     */
+    public void setSelectedLanguage(String language) {
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString(KEY_LANGUAGE, language);
+        editor.commit();
+    }
+
+    /**
+     * 获取当前选中语言
+     * @return
+     */
+    public String getSelectedLanguage() {
+       return mPref.getString(KEY_LANGUAGE,"zh");
+    }
+
 
 
     /**
@@ -165,13 +186,13 @@ public class Prefer {
     }
 
     //蓝牙当前地址
-    public void setCurrentDevice(String deviceAddress) {
+    public void setLatelyConnectedDevice(String deviceAddress) {
         SharedPreferences.Editor editor = mPref.edit();
         editor.putString(KEY_DECICE, deviceAddress);
         editor.commit();
     }
 
-    public String getCurrentDecice() {
+    public String getLatelyConnectedDevice() {
         return mPref.getString(KEY_DECICE, "");
     }
 
@@ -179,7 +200,8 @@ public class Prefer {
     //退出登录后清除缓存数据
     public void clearData() {
 //        String setBleStatus = getBleStatus();
-        String currentDecice = getCurrentDecice();
+        String currentDevice = getLatelyConnectedDevice();
+        String language = getSelectedLanguage();
 
         //清楚数据
         SharedPreferences.Editor editor = mPref.edit();
@@ -187,7 +209,7 @@ public class Prefer {
         editor.commit();
 
         //重新写入
-//        setBleStatus(setBleStatus);
-        setCurrentDevice(currentDecice);
+        setLatelyConnectedDevice(currentDevice);
+        setSelectedLanguage(language);
     }
 }

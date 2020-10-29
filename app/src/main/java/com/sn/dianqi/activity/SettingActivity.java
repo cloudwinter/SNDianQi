@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sn.dianqi.R;
 import com.sn.dianqi.base.BaseActivity;
+import com.sn.dianqi.dialog.LanguageDialog;
+import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.view.TranslucentActionBar;
+
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -19,10 +24,18 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
 
     @BindView(R.id.actionbar)
     TranslucentActionBar actionBar;
+
     @BindView(R.id.ll_connect)
     LinearLayout llConnect;
+    @BindView(R.id.tv_connect)
+    TextView tvConnect;
+
     @BindView(R.id.ll_language)
     LinearLayout llLanguage;
+    @BindView(R.id.tv_language)
+    TextView tvLanguage;
+
+
     @BindView(R.id.ll_version)
     LinearLayout llVersion;
     @BindView(R.id.ll_privacy)
@@ -49,6 +62,31 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
             this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             actionBar.setStatusBarHeight(getStatusBarHeight());
         }
+
+        initView();
+    }
+
+    private void initView() {
+        llConnect.setOnClickListener(this);
+        llLanguage.setOnClickListener(this);
+        llPrivacy.setOnClickListener(this);
+        // 获取当前系统的语言
+        Locale curLocale = getResources().getConfiguration().locale;
+        //通过Locale的equals方法，判断出当前语言环境
+        if (curLocale.getLanguage().equals("en")) {
+            //英文
+            tvLanguage.setText(R.string.english);
+        } else {
+            //中文
+            tvLanguage.setText(R.string.chinese);
+        }
+
+        if (Prefer.getInstance().isBleConnected()) {
+            tvConnect.setText(R.string.connected);
+        } else {
+            tvConnect.setText(R.string.not_connected);
+        }
+
     }
 
     @Override
@@ -56,10 +94,12 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
         switch (v.getId()) {
             case R.id.ll_connect:
                 Intent intent = new Intent(SettingActivity.this, ConnectActivity.class);
+                intent.putExtra("from","set");
                 startActivity(intent);
                 break;
             case R.id.ll_language:
-                // TODO
+                LanguageDialog languageDialog = new LanguageDialog(this);
+                languageDialog.show();
                 break;
             case R.id.ll_privacy:
                 Intent webIntent = new Intent(SettingActivity.this, WebActivity.class);

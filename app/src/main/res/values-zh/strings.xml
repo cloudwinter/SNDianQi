@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SNDianQi</string>
+    <string name="app_name">Sweet Night</string>
+
+    <!-- common -->
+    <string name="exit">再按一次后退键退出程序</string>
+
     <string name="text_enter">进入</string>
     <string name="blue_equipment">蓝牙设备</string>
     <string name="search_blue_equipment">搜索附近蓝牙设备</string>
     <string name="searching">扫描中...</string>
 
-
+    <string name="connecting">连接中...</string>
     <string name="please_wait">请稍后...</string>
 
     <!-- dialog -->
+    <string name="connected_failed">连接失败,请尝试重新连接</string>
     <string name="dialog_title_disconnect">是否断开连接</string>
     <string name="dialog_negetive">取消</string>
     <string name="dialog_positive">确认</string>
@@ -55,5 +60,7 @@
     <string name="tentxiaoshi">10小时</string>
 
     <string name="device_no_connected">设备未连接</string>
+
+    <string name="device_disconnect">设备已断开，请重新连接</string>
 
 </resources>

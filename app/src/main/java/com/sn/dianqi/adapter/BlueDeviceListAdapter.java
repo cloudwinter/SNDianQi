@@ -34,17 +34,20 @@ public class BlueDeviceListAdapter extends BaseAdapter {
         mInflator = context.getLayoutInflater();
     }
 
-    public void addDevice(BluetoothDevice device) {
+    public DeviceBean addDevice(BluetoothDevice device,boolean isConnected) {
         if (!mLeDevices.contains(device) && device.getName() != null) {
             mLeDevices.add(device);
             DeviceBean deviceBean = new DeviceBean();
-            deviceBean.setConnected(false);
+            deviceBean.setConnected(isConnected);
             deviceBean.setTitle(device.getName());
             deviceBean.setAddress(device.getAddress());
             deviceBeanList.add(deviceBean);
             notifyDataSetChanged();
+            return deviceBean;
         }
+        return null;
     }
+
 
     public BluetoothDevice getDevice(int position) {
         return mLeDevices.get(position);

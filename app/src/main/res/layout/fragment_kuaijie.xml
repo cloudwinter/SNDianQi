@@ -32,7 +32,7 @@
                 android:id="@+id/text_anjian_top_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="看电视"
+                android:text="@string/kandianshi"
                 android:textColor="@color/FA3008"
                 android:textSize="@dimen/sp_14">
             </TextView>

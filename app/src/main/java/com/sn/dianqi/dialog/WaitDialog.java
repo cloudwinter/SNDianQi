@@ -2,6 +2,7 @@ package com.sn.dianqi.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class WaitDialog extends Dialog {
 
     private Animation animation = null;
     private TextView hintTv;
+    private ImageView image;
     private boolean isCanceled;
 
     public static WaitDialog showProgressDialog(Context context, String message) {
@@ -47,7 +49,7 @@ public class WaitDialog extends Dialog {
 
     public WaitDialog(Context context) {
         super(context, R.style.waiting_dialog_style);
-        initView(context, context.getString(R.string.please_wait));
+        initView(context, context.getString(R.string.connecting));
     }
 
     public WaitDialog(Context context, String message) {
@@ -68,11 +70,16 @@ public class WaitDialog extends Dialog {
             hintTv.setText(message);
         }
 
-        ImageView image = (ImageView) view.findViewById(R.id.progress_view);
+        image = (ImageView) view.findViewById(R.id.progress_view);
         animation = AnimationUtils.loadAnimation(context, R.anim.loading_animation);
-        image.startAnimation(animation);
-
         setContentView(view);
+    }
+
+
+    @Override
+    public void show() {
+        super.show();
+        image.startAnimation(animation);
     }
 
     public void dismiss() {
