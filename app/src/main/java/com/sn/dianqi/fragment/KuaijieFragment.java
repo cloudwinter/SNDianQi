@@ -125,19 +125,19 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
             public void run() {
                 try {
                     // 记忆1
-                    sendBlueCmd("FF FF FF FF 03 00 28 00 09 1F 0E");
+                    sendBlueCmd("FF FF FF FF 03 00 28 00 03 9F 09");
                     Thread.sleep(300L);
                     // 记忆2
-                    sendBlueCmd("FF FF FF FF 03 00 31 00 09 CE C9");
+                    sendBlueCmd("FF FF FF FF 03 00 30 00 03 1F 0E");
                     Thread.sleep(300L);
                     // 看电视
-                    sendBlueCmd("FF FF FF FF 03 00 16 00 09 7E C2");
+                    sendBlueCmd("FF FF FF FF 03 00 18 00 03 9F 06");
                     Thread.sleep(300L);
                     // 止鼾
-                    sendBlueCmd("FF FF FF FF 03 00 1F 00 09 AE C0");
+                    sendBlueCmd("FF FF FF FF 03 00 20 00 03 1E CB");
                     Thread.sleep(300L);
                     // 复原
-                    sendBlueCmd("FF FF FF FF 03 00 3A 00 09 BF 0B");
+                    sendBlueCmd("FF FF FF FF 03 00 38 00 03 9E CC");
                 } catch (Exception e) {
                     LogUtils.e(TAG, "askStatus 异常" + e.getMessage());
                     e.printStackTrace();
@@ -264,23 +264,23 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
 
 
     private void handleReceiveData(String data) {
-        if (data.contains("FF FF FF FF 03 12 00 AA")) {
+        if (data.contains("FF FF FF FF 03 06 00 0A")) {
             // 记忆1有记忆返回码
             jiyi1View.setSelected(true);
         }
-        if (data.contains("FF FF FF FF 03 12 00 AA")) {
+        if (data.contains("FF FF FF FF 03 06 00 0B")) {
             // 记忆2有记忆返回码
             jiyi2View.setSelected(true);
         }
-        if (data.contains("FF FF FF FF 03 12 00 A5")) {
+        if (data.contains("FF FF FF FF 03 06 00 05")) {
             // 看电视
             kandianshiView.setSelected(true);
         }
-        if (data.contains("FF FF FF FF 03 12 00 A9")) {
+        if (data.contains("FF FF FF FF 03 06 00 09")) {
             // 零压力
             lingyaliView.setSelected(true);
         }
-        if (data.contains("FF FF FF FF 03 12 00 AF")) {
+        if (data.contains("FF FF FF FF 03 06 00 0F")) {
             // 止鼾
             zhihanView.setSelected(true);
         }

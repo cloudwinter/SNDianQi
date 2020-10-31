@@ -308,8 +308,11 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 public void run() {
                     if (device != null) {
                         // 发送给客户时需要加上
-
-                        if (!device.getName().contains("QMS2") && !device.getName().contains("QMS-MQ")) {
+                        String deviceName = device.getName();
+                        if (TextUtils.isEmpty(deviceName)) {
+                            return;
+                        }
+                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
                             return;
                         }
 

@@ -58,23 +58,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // 获取当前系统的语言
-        Locale curLocale = getResources().getConfiguration().locale;
-        //通过Locale的equals方法，判断出当前语言环境
-        if (curLocale.getLanguage().equals("en")) {
-            //英文
-            imageView.setImageResource(R.mipmap.en_logo);
-        } else {
-            //中文
-            imageView.setImageResource(R.mipmap.zh_logo);
-        }
-
-//        String language = PreferenceUtil.getString(Constants.SharePre.KEY_LANGUAGE, "zh");
-//        if ("zh".equals(language)) {
-//            imageView.setImageResource(R.mipmap.zh_logo);
-//        } else {
+//        // 获取当前系统的语言
+//        Locale curLocale = getResources().getConfiguration().locale;
+//        //通过Locale的equals方法，判断出当前语言环境
+//        if (curLocale.getLanguage().equals("en")) {
+//            //英文
 //            imageView.setImageResource(R.mipmap.en_logo);
+//        } else {
+//            //中文
+//            imageView.setImageResource(R.mipmap.zh_logo);
 //        }
+
+        String language = Prefer.getInstance().getSelectedLanguage();
+        if ("zh".equals(language)) {
+            imageView.setImageResource(R.mipmap.zh_logo);
+        } else {
+            imageView.setImageResource(R.mipmap.en_logo);
+        }
         textView.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     startActivity(intent);
                 } else {
                     // 跳转到蓝牙搜索和连接界面
-                    Intent intent = new Intent(MainActivity.this, ConnectActivity.class);
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                     intent.putExtra("from","main");
                     startActivity(intent);
                 }

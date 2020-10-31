@@ -9,6 +9,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
+
     defaultConfig {
         applicationId "com.sn.dianqi"
         minSdkVersion 18
@@ -61,7 +62,7 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            buildConfigField "boolean", "Debuggable", "false"
+            buildConfigField "boolean", "Debuggable", "true"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
