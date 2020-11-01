@@ -108,12 +108,35 @@ public class DengguangFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.tv_10fenzhong:
                 sendBlueCmd("FF FF FF FF 05 00 00 00 19 16 CA");
+                if (tenMinsTextView.isSelected()) {
+                    tenMinsTextView.setSelected(false);
+                } else {
+                    tenMinsTextView.setSelected(true);
+                    eightHoursTextView.setSelected(false);
+                    tenHoursTextView.setSelected(false);
+                }
                 break;
             case R.id.tv_8xiaoshi:
                 sendBlueCmd("FF FF FF FF 05 00 00 00 1A 56 CB");
+                // 8小时
+                if (eightHoursTextView.isSelected()) {
+                    eightHoursTextView.setSelected(false);
+                } else {
+                    tenMinsTextView.setSelected(false);
+                    eightHoursTextView.setSelected(true);
+                    tenHoursTextView.setSelected(false);
+                }
                 break;
             case R.id.tv_10xiaoshi:
                 sendBlueCmd("FF FF FF FF 05 00 00 00 1B 97 0B");
+                // 10小时
+                if (tenHoursTextView.isSelected()) {
+                    tenHoursTextView.setSelected(false);
+                } else {
+                    tenMinsTextView.setSelected(false);
+                    eightHoursTextView.setSelected(false);
+                    tenHoursTextView.setSelected(true);
+                }
                 break;
 
         }
@@ -176,7 +199,7 @@ public class DengguangFragment extends BaseFragment implements View.OnClickListe
                     String data = bundle.getString(BluetoothLeService.EXTRA_DATA);
                     if (data != null) {
                         LogUtils.e("==灯光  接收设备返回的数据==", data);
-                        handleReceiveData(data);
+                        //handleReceiveData(data);
                     }
                 }
             }
