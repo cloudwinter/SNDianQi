@@ -68,7 +68,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     private static final int MSG_GATT_SERVICE_DISCOVERY = 104;
 
     // 从哪个页面进入 main 首页 /set 设置
-    protected String mFrom = "main";
+    protected String mFrom = "";
     // 是否是第一次扫描
     protected boolean isFirstScan = false;
 
@@ -113,6 +113,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     @Override
     public void onRightClick() {
         // do nothing
+        Intent intent = new Intent(ConnectActivity.this, SettingActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -123,8 +125,10 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        LogUtils.e(TAG,"执行ConnectActivity onDestroy方法");
         unregisterReceiver(mGattUpdateReceiver);
+        unbindService(mServiceConnection);
+        super.onDestroy();
     }
 
     @Override
@@ -147,6 +151,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
         // 启动蓝牙service
         Intent blueServiceIntent = new Intent(ConnectActivity.this, BluetoothLeService.class);
+        startService(blueServiceIntent);
         bindService(blueServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
         // 启动扫描
@@ -312,9 +317,9 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                         if (TextUtils.isEmpty(deviceName)) {
                             return;
                         }
-                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
-                            return;
-                        }
+//                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
+//                            return;
+//                        }
 
                         String latelyConnectedDevice = Prefer.getInstance().getLatelyConnectedDevice();
                         if (device.getAddress().equals(latelyConnectedDevice)) {
@@ -324,7 +329,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                                 mBlueDeviceListAdapter.addDevice(device,true);
                                 return;
                             }
-                            if (mFrom.equals("main") && isFirstScan ) {
+                            if (("main").equals(mFrom) && isFirstScan ) {
                                 // 如果是从首页第一次进入，并且扫描到之前连接过的设备，则自动连接
                                 mSelectedBlueDevice = device;
                                 mSelectedDeviceBean = mBlueDeviceListAdapter.addDevice(device,false);

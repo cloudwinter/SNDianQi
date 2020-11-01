@@ -82,6 +82,7 @@ public class BluetoothLeService extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED)//连接失败
             {
                 //在每次连接服务的时候， 或则断开后及时把之前的服务关闭掉
+                LogUtils.e("==广播更新连接状态==", "Connected to GATT server. STATE_DISCONNECTED ");
                 if(mBluetoothGatt != null){
                     mBluetoothGatt.disconnect();
                     mBluetoothGatt.close();
@@ -238,7 +239,8 @@ public class BluetoothLeService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        close();
+        LogUtils.e("BluetoothLeService 调用unbind方法");
+        //close();
         return super.onUnbind(intent);
     }
 
@@ -368,6 +370,7 @@ public class BluetoothLeService extends Service {
      * @Description: TODO(关闭所有蓝牙连接)
      */
     public void close() {
+        LogUtils.e("BluetoothLeService 执行close方法");
         if (mBluetoothGatt == null) {
             return;
         }

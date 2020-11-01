@@ -95,6 +95,10 @@ public class DengguangFragment extends BaseFragment implements View.OnClickListe
             LogUtils.i(TAG, "sendBlueCmd -> 蓝牙未连接");
             return;
         }
+        if (characteristic == null) {
+            LogUtils.i(TAG, "sendBlueCmd -> 特征值未获取到");
+            return;
+        }
         characteristic.setValue(BlueUtils.StringToBytes(cmd));
         MyApplication.getInstance().mBluetoothLeService.writeCharacteristic(characteristic);
     }
