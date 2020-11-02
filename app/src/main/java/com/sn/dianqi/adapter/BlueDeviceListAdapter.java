@@ -2,7 +2,7 @@ package com.sn.dianqi.adapter;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,28 +20,31 @@ import java.util.List;
  * 蓝牙设备自定义adapter
  */
 public class BlueDeviceListAdapter extends BaseAdapter {
-
-    private ArrayList<BluetoothDevice> mLeDevices;
+//
+//    private ArrayList<BluetoothDevice> mLeDevices;
 
     private List<DeviceBean> deviceBeanList;
 
     private LayoutInflater mInflator;
 
+    private List<String> addresList;
+
     public BlueDeviceListAdapter(Activity context) {
         super();
-        mLeDevices = new ArrayList<BluetoothDevice>();
+//        mLeDevices = new ArrayList<BluetoothDevice>();
         deviceBeanList = new ArrayList<>();
+        addresList = new ArrayList<>();
         mInflator = context.getLayoutInflater();
     }
 
-    public DeviceBean addDevice(BluetoothDevice device,boolean isConnected) {
-        if (!mLeDevices.contains(device) && device.getName() != null) {
-            mLeDevices.add(device);
+    public DeviceBean addDevice(BluetoothDevice device, boolean isConnected) {
+        if (device != null && !TextUtils.isEmpty(device.getName()) && !addresList.contains(device.getAddress())) {
             DeviceBean deviceBean = new DeviceBean();
             deviceBean.setConnected(isConnected);
             deviceBean.setTitle(device.getName());
             deviceBean.setAddress(device.getAddress());
             deviceBeanList.add(deviceBean);
+            addresList.add(device.getAddress());
             notifyDataSetChanged();
             return deviceBean;
         }
@@ -49,12 +52,21 @@ public class BlueDeviceListAdapter extends BaseAdapter {
     }
 
 
-    public BluetoothDevice getDevice(int position) {
-        return mLeDevices.get(position);
+    public void addDevice(DeviceBean deviceBean) {
+        if (deviceBean != null && !addresList.contains(deviceBean.getAddress())) {
+            deviceBeanList.add(deviceBean);
+            addresList.add(deviceBean.getAddress());
+            notifyDataSetChanged();
+        }
     }
 
+
+//    public BluetoothDevice getDevice(int position) {
+//        return mLeDevices.get(position);
+//    }
+
     public void clear() {
-        mLeDevices.clear();
+//        mLeDevices.clear();
         deviceBeanList.clear();
     }
 

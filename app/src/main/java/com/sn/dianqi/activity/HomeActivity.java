@@ -219,7 +219,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             if (action == BluetoothLeService.ACTION_GATT_DISCONNECTED) {
                 // 监听到蓝牙已断开
                 LogUtils.e(TAG, "监听到蓝牙状态 ：已断开");
-                Prefer.getInstance().setBleStatus("未连接");
+                Prefer.getInstance().setBleStatus("未连接",null);
                 ToastUtils.showToast(HomeActivity.this,R.string.device_disconnect);
             }
         }

@@ -251,7 +251,7 @@ public class BluetoothLeService extends Service {
         disconnect();
         // 关闭
         close();
-        Prefer.getInstance().setBleStatus("未连接");
+        Prefer.getInstance().setBleStatus("未连接",null);
     }
 
     private final IBinder mBinder = new LocalBinder();

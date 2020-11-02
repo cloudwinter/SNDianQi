@@ -52,8 +52,8 @@ public class DengguangFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         getActivity().unregisterReceiver(mDengguangReceiver);
+        super.onDestroy();
     }
 
     @Override

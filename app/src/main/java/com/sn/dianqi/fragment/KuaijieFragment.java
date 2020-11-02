@@ -64,8 +64,8 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         getActivity().unregisterReceiver(mKuaijieReceiver);
+        super.onDestroy();
     }
 
     @Override

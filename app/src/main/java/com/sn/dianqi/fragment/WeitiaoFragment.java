@@ -68,8 +68,8 @@ public class WeitiaoFragment extends BaseFragment implements View.OnTouchListene
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         getActivity().unregisterReceiver(mDengguangReceiver);
+        super.onDestroy();
     }
 
     @Override

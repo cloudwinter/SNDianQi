@@ -1,9 +1,13 @@
 package com.sn.dianqi.util;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.sn.dianqi.MyApplication;
+import com.sn.dianqi.bean.DeviceBean;
 
 
 /**
@@ -25,6 +29,7 @@ public class Prefer {
     private final String KEY_M4 = "KEY_M4";
     private final String KEY_M5 = "KEY_M5";
     private final String KEY_BLESTATUS = "KEY_BLESTATUS";
+    private final String KEY_BLECONNECTDEVICE = "KEY_KEY_BLECONNECTDEVICE";
     private final String KEY_NEEDGUIDE = "KEY_NEEDGUIDE";
     private final String KEY_DECICE = "KEY_DECICE";
     private final String KEY_LANGUAGE = "KEY_LANGUAGE";
@@ -163,10 +168,36 @@ public class Prefer {
     }
 
     //蓝牙连接状态
-    public void setBleStatus(String bleStatus) {
+    public void setBleStatus(String bleStatus, DeviceBean deviceBean) {
         SharedPreferences.Editor editor = mPref.edit();
         editor.putString(KEY_BLESTATUS, bleStatus);
+        if (bleStatus.equals("未连接")) {
+            editor.putString(KEY_BLECONNECTDEVICE,"");
+        } else {
+            String json = new Gson().toJson(deviceBean);
+            LogUtils.d("Prefer","setBleStatus:"+json);
+            editor.putString(KEY_BLECONNECTDEVICE,json);
+        }
         editor.commit();
+    }
+
+    /**
+     * 获取当前选中的device
+     * @return
+     */
+    public DeviceBean getConnectedDevice() {
+        String value = mPref.getString(KEY_BLECONNECTDEVICE, "");
+        if (TextUtils.isEmpty(value)) {
+            return null;
+        }
+        DeviceBean deviceBean = null;
+        try {
+            deviceBean = new Gson().fromJson(value, DeviceBean.class);
+        } catch (Exception e) {
+            LogUtils.e("Prefer", e.getMessage());
+            e.printStackTrace();
+        }
+        return deviceBean;
     }
 
     public String getBleStatus() {
