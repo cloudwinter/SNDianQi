@@ -60,7 +60,7 @@
 
         <com.sn.dianqi.view.JiyiView
             android:id="@+id/view_jiyi1"
-            android:layout_width="162dp"
+            android:layout_width="@dimen/jiyi_width"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             app:title="@string/jiyi1"
@@ -77,7 +77,7 @@
 
         <com.sn.dianqi.view.JiyiView
             android:id="@+id/view_jiyi2"
-            android:layout_width="162dp"
+            android:layout_width="@dimen/jiyi_width"
             android:layout_height="match_parent"
             android:background="@mipmap/ic_anjian_tuoyuan_normal"
             android:orientation="horizontal"
@@ -93,14 +93,14 @@
         android:layout_width="match_parent"
         android:layout_height="102dp"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="69dp"
-        android:layout_marginRight="69dp"
+        android:layout_marginLeft="@dimen/anjian_margin_sides"
+        android:layout_marginRight="@dimen/anjian_margin_sides"
         android:orientation="horizontal">
 
         <com.sn.dianqi.view.AnjianYuanView
             android:id="@+id/view_kandianshi"
-            android:layout_width="102dp"
-            android:layout_height="102dp"
+            android:layout_width="@dimen/anjian_yuan_size"
+            android:layout_height="@dimen/anjian_yuan_size"
             app:title="@string/kandianshi"
             app:icon="@mipmap/ic_kandianshi_xiao"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
@@ -115,8 +115,8 @@
 
         <com.sn.dianqi.view.AnjianYuanView
             android:id="@+id/view_lingyali"
-            android:layout_width="102dp"
-            android:layout_height="102dp"
+            android:layout_width="@dimen/anjian_yuan_size"
+            android:layout_height="@dimen/anjian_yuan_size"
             app:icon="@mipmap/ic_lingyali_xiao"
             app:title="@string/lingyali"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
@@ -130,15 +130,15 @@
         android:layout_width="match_parent"
         android:layout_height="102dp"
         android:layout_marginTop="16dp"
-        android:layout_marginLeft="69dp"
-        android:layout_marginRight="69dp"
+        android:layout_marginLeft="@dimen/anjian_margin_sides"
+        android:layout_marginRight="@dimen/anjian_margin_sides"
         android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
         <com.sn.dianqi.view.AnjianYuanView
             android:id="@+id/view_zhihan"
-            android:layout_width="102dp"
-            android:layout_height="102dp"
+            android:layout_width="@dimen/anjian_yuan_size"
+            android:layout_height="@dimen/anjian_yuan_size"
             app:title="@string/zhihan"
             app:icon="@mipmap/ic_zhihan_xiao"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"
@@ -153,8 +153,8 @@
 
         <com.sn.dianqi.view.AnjianYuanView
             android:id="@+id/view_fuyuan"
-            android:layout_width="102dp"
-            android:layout_height="102dp"
+            android:layout_width="@dimen/anjian_yuan_size"
+            android:layout_height="@dimen/anjian_yuan_size"
             app:title="@string/fuyuan"
             app:icon="@mipmap/ic_fuyuan_xiao"
             app:bgnormal="@mipmap/ic_anjian_yuan_normal"

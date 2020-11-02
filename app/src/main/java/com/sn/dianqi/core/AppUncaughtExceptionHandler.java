@@ -60,13 +60,13 @@ public class AppUncaughtExceptionHandler implements Thread.UncaughtExceptionHand
         // 打印异常信息
         ex.printStackTrace();
         if (!handleException(ex) && mDefaultHandler != null) {
+            // 默认自己的异常处理
             mDefaultHandler.uncaughtException(thread, ex);
+        } else {
+            // 强制杀掉当前进程 FIXME
+            Process.killProcess(Process.myPid());
+            System.exit(0);
         }
-
-        // 强制杀掉当前进程 FIXME
-        Process.killProcess(Process.myPid());
-        System.exit(0);
-
     }
 
     private boolean handleException(Throwable ex) {

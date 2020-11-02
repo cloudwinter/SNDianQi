@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="点击连接"
+            android:text="@string/click_to_connect"
             android:textColor="@color/text_orange"
             android:textSize="14sp" />
 
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="断开连接"
+                android:text="@string/disconnect"
                 android:textColor="@color/text_orange"
                 android:textSize="14sp" />
 
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="已连接"
+                android:text="@string/connected"
                 android:textColor="#F14C27"
                 android:textSize="14sp" />
 

@@ -44,6 +44,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.img_logo)
     ImageView imageView;
 
+
+
     // 蓝牙适配器
     private BluetoothAdapter mBluetoothAdapter;
 
@@ -57,17 +59,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-//        // 获取当前系统的语言
-//        Locale curLocale = getResources().getConfiguration().locale;
-//        //通过Locale的equals方法，判断出当前语言环境
-//        if (curLocale.getLanguage().equals("en")) {
-//            //英文
-//            imageView.setImageResource(R.mipmap.en_logo);
-//        } else {
-//            //中文
-//            imageView.setImageResource(R.mipmap.zh_logo);
-//        }
 
         String language = Prefer.getInstance().getSelectedLanguage();
         if ("zh".equals(language)) {

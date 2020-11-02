@@ -9,15 +9,15 @@
         android:id="@+id/img_dian"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_marginLeft="26dp"
+        android:layout_marginLeft="@dimen/jiyi_icon_left"
         android:background="@mipmap/ic_dian_normal"/>
     
     <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="记忆1"
-        android:layout_marginLeft="35dp"
+        android:text="@string/jiyi1"
+        android:layout_marginLeft="@dimen/jiyi_title_left"
         android:textSize="@dimen/sp_14"
         android:textColor="@color/text_black"
         />
