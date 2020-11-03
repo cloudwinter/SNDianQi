@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:text="@string/connecting_device"
             android:textColor="@color/text_black"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_connect"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:textColor="@color/F14C27"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
             android:layout_weight="1"
             android:text="@string/switch_language"
             android:textColor="@color/text_black"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_language"
@@ -79,7 +79,7 @@
             android:layout_marginRight="8dp"
             android:text="1.0.0"
             android:textColor="@color/F14C27"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
             android:layout_weight="1"
             android:text="@string/version"
             android:textColor="@color/text_black"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_version"
@@ -120,7 +120,7 @@
             android:layout_marginRight="8dp"
             android:text="1.0.0"
             android:textColor="@color/F14C27"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -151,7 +151,7 @@
             android:layout_weight="1"
             android:text="@string/privacy_policy"
             android:textColor="@color/text_black"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_privacy"
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:textColor="@color/F14C27"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
             android:layout_weight="1"
             android:text="调试开关"
             android:textColor="@color/text_black"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_debug"
@@ -199,7 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:textColor="@color/F14C27"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:layout_width="wrap_content"

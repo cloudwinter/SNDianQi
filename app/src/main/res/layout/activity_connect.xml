@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:text="@string/blue_equipment"
                 android:textColor="@color/text_black"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
 
             <TextView
@@ -56,7 +56,7 @@
                 android:layout_marginRight="8dp"
                 android:text="5s"
                 android:textColor="@color/text_black"
-                android:textSize="13sp" />
+                android:textSize="13dp" />
 
         </LinearLayout>
 
