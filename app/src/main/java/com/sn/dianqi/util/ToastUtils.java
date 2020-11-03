@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sn.dianqi.R;
+import com.sn.dianqi.view.SNToast;
 
 
 /**
@@ -16,7 +17,7 @@ import com.sn.dianqi.R;
  */
 public class ToastUtils {
 
-    private static Toast mToast;
+    private static SNToast mToast;
 
     private static Handler mhandler = new Handler();
     private static Runnable r = new Runnable() {
@@ -46,7 +47,7 @@ public class ToastUtils {
         if (null != mToast) {
             mToast.setText(text);
         } else {
-            mToast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+            mToast = SNToast.makeText(context, text, Toast.LENGTH_LONG);
         }
         if (text.length() > 5) {
             lengthLong = true;

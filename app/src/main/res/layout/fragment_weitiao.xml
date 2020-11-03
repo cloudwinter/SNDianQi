@@ -81,6 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/beibutiaozheng"
+                android:textSize="@dimen/sp_13"
+                android:textColor="@color/text_black"
                 />
 
         </LinearLayout>
@@ -146,6 +148,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tuibutiaozheng"
+                android:textSize="@dimen/sp_13"
+                android:textColor="@color/text_black"
                 />
 
         </LinearLayout>
