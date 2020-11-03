@@ -98,10 +98,10 @@ public class MyApplication extends Application {
         super.onCreate();
 
         // 设置app字体不跟随系统
-        Resources res = super.getResources();
-        Configuration config = new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config, res.getDisplayMetrics());
+//        Resources res = super.getResources();
+//        Configuration config = new Configuration();
+//        config.setToDefaults();
+//        res.updateConfiguration(config, res.getDisplayMetrics());
 
         instance = this;
         AppUncaughtExceptionHandler.getInstance().init(this);

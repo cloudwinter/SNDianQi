@@ -107,8 +107,8 @@ public class LoggerView extends FrameLayout implements Thread.UncaughtExceptionH
         mLogContainer = new LinearLayout(context);
         mLogContainer.setOrientation(LinearLayout.VERTICAL);
         mLogContainer.setBackgroundColor(Color.argb(0x33, 0X00, 0x00, 0x00));
-        int widthPixels = context.getResources().getDisplayMetrics().widthPixels * 3 / 2;
-        int heightPixels = context.getResources().getDisplayMetrics().heightPixels * 3 / 2;
+        int widthPixels = context.getResources().getDisplayMetrics().widthPixels  / 2;
+        int heightPixels = context.getResources().getDisplayMetrics().heightPixels  / 2;
         LayoutParams layoutParams = new LayoutParams(widthPixels, heightPixels, Gravity.CENTER);
         mLogContainer.setLayoutParams(layoutParams);
         mLogContainer.setVisibility(GONE);
