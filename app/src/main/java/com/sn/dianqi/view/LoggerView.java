@@ -60,7 +60,7 @@ import androidx.customview.widget.ViewDragHelper;
  */
 
 public class LoggerView extends FrameLayout implements Thread.UncaughtExceptionHandler, Application.ActivityLifecycleCallbacks {
-    private static boolean dev = true;  // 开发模式
+    private static boolean dev = false;  // 开发模式
     private static boolean debuggable = true; //正式环境(false)不打印日志，也不能唤起app的debug界面
     public static LoggerView me;
     private static String tag;
@@ -107,9 +107,9 @@ public class LoggerView extends FrameLayout implements Thread.UncaughtExceptionH
         mLogContainer = new LinearLayout(context);
         mLogContainer.setOrientation(LinearLayout.VERTICAL);
         mLogContainer.setBackgroundColor(Color.argb(0x33, 0X00, 0x00, 0x00));
-        int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
-        int heightPixels = context.getResources().getDisplayMetrics().heightPixels;
-        LayoutParams layoutParams = new LayoutParams(widthPixels / 2, heightPixels / 3, Gravity.CENTER);
+        int widthPixels = context.getResources().getDisplayMetrics().widthPixels * 3 / 2;
+        int heightPixels = context.getResources().getDisplayMetrics().heightPixels * 3 / 2;
+        LayoutParams layoutParams = new LayoutParams(widthPixels, heightPixels, Gravity.CENTER);
         mLogContainer.setLayoutParams(layoutParams);
         mLogContainer.setVisibility(GONE);
         //小窗口标题

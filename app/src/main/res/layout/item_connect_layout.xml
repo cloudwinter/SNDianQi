@@ -37,15 +37,6 @@
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/tv_disconnect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/disconnect"
-                android:textColor="@color/text_orange"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/tv_connected"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

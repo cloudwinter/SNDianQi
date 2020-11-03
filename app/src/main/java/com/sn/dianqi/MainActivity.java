@@ -110,8 +110,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private boolean isConnected() {
         BluetoothLeService bluetoothLeService = MyApplication.getInstance().mBluetoothLeService;
-        if (bluetoothLeService != null && MyApplication.getInstance().gattCharacteristic != null
-                && Prefer.getInstance().isBleConnected()) {
+        if (bluetoothLeService != null && Prefer.getInstance().isBleConnected()) {
             return true;
         }
         return false;

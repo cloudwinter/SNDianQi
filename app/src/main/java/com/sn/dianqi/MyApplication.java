@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.util.Base64;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -69,10 +71,38 @@ public class MyApplication extends Application {
         return instance;
     }
 
+
+    @Override
+    public void onTerminate() {
+        LogUtils.e("---", "[MyApplication] onTerminate");
+        super.onTerminate();
+        if (Prefer.getInstance().isBleConnected()) {
+            MyApplication.getInstance().mBluetoothLeService.disconnect();
+            Prefer.getInstance().setBleStatus("未连接",null);
+        }
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        LogUtils.e("---", "[MyApplication] onTrimMemory level:"+level);
+        if (Prefer.getInstance().isBleConnected()) {
+            MyApplication.getInstance().mBluetoothLeService.disconnect();
+            Prefer.getInstance().setBleStatus("未连接",null);
+        }
+        super.onTrimMemory(level);
+    }
+
     @Override
     public void onCreate() {
         LogUtils.e("---", "[MyApplication] onCreate");
         super.onCreate();
+
+        // 设置app字体不跟随系统
+        Resources res = super.getResources();
+        Configuration config = new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+
         instance = this;
         AppUncaughtExceptionHandler.getInstance().init(this);
         initImageLoader();
@@ -216,4 +246,5 @@ public class MyApplication extends Application {
 
         Bugly.init(getApplicationContext(), "53df956f2f", false);
     }
+
 }

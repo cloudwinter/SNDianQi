@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sn.dianqi.R;
 import com.sn.dianqi.bean.DeviceBean;
+import com.sn.dianqi.util.BlueUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,6 @@ import java.util.List;
  * 蓝牙设备自定义adapter
  */
 public class BlueDeviceListAdapter extends BaseAdapter {
-//
-//    private ArrayList<BluetoothDevice> mLeDevices;
 
     private List<DeviceBean> deviceBeanList;
 
@@ -31,7 +30,6 @@ public class BlueDeviceListAdapter extends BaseAdapter {
 
     public BlueDeviceListAdapter(Activity context) {
         super();
-//        mLeDevices = new ArrayList<BluetoothDevice>();
         deviceBeanList = new ArrayList<>();
         addresList = new ArrayList<>();
         mInflator = context.getLayoutInflater();
@@ -41,7 +39,7 @@ public class BlueDeviceListAdapter extends BaseAdapter {
         if (device != null && !TextUtils.isEmpty(device.getName()) && !addresList.contains(device.getAddress())) {
             DeviceBean deviceBean = new DeviceBean();
             deviceBean.setConnected(isConnected);
-            deviceBean.setTitle(device.getName());
+            deviceBean.setTitle(BlueUtils.transferBlueName(device.getName()));
             deviceBean.setAddress(device.getAddress());
             deviceBeanList.add(deviceBean);
             addresList.add(device.getAddress());
@@ -60,13 +58,18 @@ public class BlueDeviceListAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 获取设备列表
+     * @return
+     */
+    public List<DeviceBean> getDeviceList() {
+        return deviceBeanList;
+    }
 
-//    public BluetoothDevice getDevice(int position) {
-//        return mLeDevices.get(position);
-//    }
+
 
     public void clear() {
-//        mLeDevices.clear();
+        addresList.clear();
         deviceBeanList.clear();
     }
 
@@ -94,12 +97,11 @@ public class BlueDeviceListAdapter extends BaseAdapter {
         // 加载listview每一项的视图
         view = mInflator.inflate(R.layout.item_connect_layout, null);
         // 初始化三个textview显示蓝牙信息
-        TextView deviceName = (TextView) view.findViewById(R.id.tv_title);
+        TextView deviceName = view.findViewById(R.id.tv_title);
         // 去连接
-        TextView tvConnect = (TextView) view.findViewById(R.id.tv_connect);
+        TextView tvConnect = view.findViewById(R.id.tv_connect);
         // 已连接
         LinearLayout lvConnected = view.findViewById(R.id.lv_connected);
-//        TextView tvDisconnect = view.findViewById(R.id.tv_disconnect);
 
         String device = deviceBeanList.get(i).getTitle();
         deviceName.setText(device);

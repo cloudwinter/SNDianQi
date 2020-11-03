@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,8 +36,12 @@ import butterknife.ButterKnife;
 /**
  * 快捷
  */
-public class KuaijieFragment extends BaseFragment implements View.OnClickListener, View.OnLongClickListener {
+public class KuaijieFragment extends BaseFragment implements View.OnClickListener,View.OnTouchListener {
 
+    /**
+     * 默认间隔
+     */
+    private final static long DEFAULT_INTERVAL = 2000;
 
     public static final String TAG = "KuaijieFragment";
     @BindView(R.id.img_anjian_top_icon)
@@ -61,6 +67,8 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
     private BluetoothGattCharacteristic characteristic;
 
     private Handler mHandler = new Handler();
+
+    private long eventDownTime = 0L;
 
     @Override
     public void onDestroy() {
@@ -95,16 +103,11 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void initView() {
-        jiyi1View.setOnClickListener(this);
-        jiyi1View.setOnLongClickListener(this);
-        jiyi2View.setOnClickListener(this);
-        jiyi2View.setOnLongClickListener(this);
-        kandianshiView.setOnClickListener(this);
-        kandianshiView.setOnLongClickListener(this);
-        lingyaliView.setOnClickListener(this);
-        lingyaliView.setOnLongClickListener(this);
-        zhihanView.setOnClickListener(this);
-        zhihanView.setOnLongClickListener(this);
+        jiyi1View.setOnTouchListener(this);
+        jiyi2View.setOnTouchListener(this);
+        kandianshiView.setOnTouchListener(this);
+        lingyaliView.setOnTouchListener(this);
+        zhihanView.setOnTouchListener(this);
         fuyuanView.setOnClickListener(this);
     }
 
@@ -115,6 +118,15 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
      */
     private void setTopIconAndTitle(int iconResId,int titleResId) {
         topIconImgView.setBackground(ContextCompat.getDrawable(getContext(),iconResId));
+        topTitleTextView.setText(getString(titleResId));
+    }
+
+
+    /**
+     * 设置顶部的title
+     * @param titleResId
+     */
+    private void setTitle(int titleResId) {
         topTitleTextView.setText(getString(titleResId));
     }
 
@@ -171,94 +183,38 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    @Override
-    public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.view_jiyi1:
-                if (jiyi1View.isSelected()) {
-                    // 有记忆
-                    sendBlueCmd("FF FF FF FF 05 00 00 AF 0A 2A F7");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 A0 0A 2F 07");
-                }
-                break;
-            case R.id.view_jiyi2:
-                if (jiyi2View.isSelected()) {
-                    // 有记忆
-                    sendBlueCmd("FF FF FF FF 05 00 00 BF 0B E6 F7");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 B0 0B E3 07");
-                }
-                break;
-            case R.id.view_kandianshi:
-                setTopIconAndTitle(R.mipmap.ic_kandianshi_da,R.string.kandianshi);
-                if (kandianshiView.isSelected()) {
-                    // 有记忆
-                    sendBlueCmd("FF FF FF FF 05 00 00 5F 05 2E F3");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 50 05 2B 03");
-                }
-                break;
-            case R.id.view_lingyali:
-                setTopIconAndTitle(R.mipmap.ic_lingyali_da,R.string.lingyali);
-                if (lingyaliView.isSelected()) {
-                    // 有记忆
-                    sendBlueCmd("FF FF FF FF 05 00 00 9F 09 7E F6");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 90 09 7B 06");
-                }
-                break;
-            case R.id.view_zhihan:
-                setTopIconAndTitle(R.mipmap.ic_zhihan_da,R.string.zhihan);
-                if (zhihanView.isSelected()) {
-                    // 有记忆
-                    sendBlueCmd("FF FF FF FF 05 00 00 FF 0F D6 F4");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 F0 0F D3 04");
-                }
-                break;
+
+    private void lingyaliLongClick() {
+        if (lingyaliView.isSelected()) {
+            // 有记忆
+            sendBlueCmd("FF FF FF FF 05 00 00 9F 09 7E F6");
+        } else {
+            sendBlueCmd("FF FF FF FF 05 00 00 90 09 7B 06");
         }
-        return false;
+    }
+
+    private void jiyi2LongClick() {
+        if (jiyi2View.isSelected()) {
+            // 有记忆
+            sendBlueCmd("FF FF FF FF 05 00 00 BF 0B E6 F7");
+        } else {
+            sendBlueCmd("FF FF FF FF 05 00 00 B0 0B E3 07");
+        }
+    }
+
+    private void jiyi1LongClick() {
+        if (jiyi1View.isSelected()) {
+            // 有记忆
+            sendBlueCmd("FF FF FF FF 05 00 00 AF 0A 2A F7");
+        } else {
+            sendBlueCmd("FF FF FF FF 05 00 00 A0 0A 2F 07");
+        }
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.view_jiyi1:
-                if (jiyi1View.isSelected()) {
-                    sendBlueCmd("FF FF FF FF 05 00 00 A1 0A 2E 97");
-                }
-                break;
-            case R.id.view_jiyi2:
-                if (jiyi1View.isSelected()) {
-                    sendBlueCmd("FF FF FF FF 05 00 00 B1 0B E2 97");
-                }
-                break;
-            case R.id.view_kandianshi:
-                setTopIconAndTitle(R.mipmap.ic_kandianshi_da,R.string.kandianshi);
-                if (kandianshiView.isSelected()) {
-                    sendBlueCmd("FF FF FF FF 05 00 00 51 05 2A 93");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 00 05 17 03");
-                }
-                break;
-            case R.id.view_lingyali:
-                setTopIconAndTitle(R.mipmap.ic_lingyali_da,R.string.lingyali);
-                if (kandianshiView.isSelected()) {
-                    sendBlueCmd("FF FF FF FF 05 00 00 91 09 7A 96");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 00 09 17 06");
-                }
-                break;
-            case R.id.view_zhihan:
-                setTopIconAndTitle(R.mipmap.ic_zhihan_da,R.string.zhihan);
-                if (kandianshiView.isSelected()) {
-                    sendBlueCmd("FF FF FF FF 05 00 00 F1 0F D2 94");
-                } else {
-                    sendBlueCmd("FF FF FF FF 05 00 00 00 0F 97 04");
-                }
-                break;
             case R.id.view_fuyuan:
                 setTopIconAndTitle(R.mipmap.ic_fuyuan_da,R.string.fuyuan);
                 sendBlueCmd("FF FF FF FF 05 00 00 00 08 D6 C6");
@@ -363,4 +319,186 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
     };
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int action = event.getAction();
+        switch (v.getId()) {
+            case R.id.view_jiyi1:
+                if (MotionEvent.ACTION_DOWN == action) {
+                    eventDownTime = System.currentTimeMillis();
+                    timeHandler.sendEmptyMessageDelayed(JIYI1_WHAT, DEFAULT_INTERVAL);
+                    if (jiyi1View.isSelected()) {
+                        setTitle(R.string.jiyi1);
+                    }
+                } else if (MotionEvent.ACTION_UP == action) {
+                    timeHandler.removeMessages(JIYI1_WHAT);
+                    if (isShortClick()) {
+                        // 短按
+                        if (jiyi1View.isSelected()) {
+                            sendBlueCmd("FF FF FF FF 05 00 00 A1 0A 2E 97");
+                        }
+                    }
+                }
+                break;
+            case R.id.view_jiyi2:
+                if (MotionEvent.ACTION_DOWN == action) {
+                    eventDownTime = System.currentTimeMillis();
+                    timeHandler.sendEmptyMessageDelayed(JIYI2_WHAT, DEFAULT_INTERVAL);
+                    if (jiyi1View.isSelected()) {
+                        setTitle(R.string.jiyi2);
+                    }
+                } else if (MotionEvent.ACTION_UP == action) {
+                    timeHandler.removeMessages(JIYI2_WHAT);
+                    if (isShortClick()) {
+                        // 短按
+                        if (jiyi2View.isSelected()) {
+                            sendBlueCmd("FF FF FF FF 05 00 00 A1 0A 2E 97");
+                        }
+                    }
+                }
+                break;
+            case R.id.view_kandianshi:
+                setTopIconAndTitle(R.mipmap.ic_kandianshi_da,R.string.kandianshi);
+                if (MotionEvent.ACTION_DOWN == action) {
+                    eventDownTime = System.currentTimeMillis();
+                    timeHandler.sendEmptyMessageDelayed(KANDIANSHI_WHAT, DEFAULT_INTERVAL);
+                } else if (MotionEvent.ACTION_UP == action) {
+                    timeHandler.removeMessages(KANDIANSHI_WHAT);
+                    if (isShortClick()) {
+                        // 短按
+                        if (kandianshiView.isSelected()) {
+                            sendBlueCmd("FF FF FF FF 05 00 00 51 05 2A 93");
+                        } else {
+                            sendBlueCmd("FF FF FF FF 05 00 00 00 05 17 03");
+                        }
+                    }
+                }
+                break;
+            case R.id.view_lingyali:
+                setTopIconAndTitle(R.mipmap.ic_lingyali_da,R.string.lingyali);
+                if (MotionEvent.ACTION_DOWN == action) {
+                    eventDownTime = System.currentTimeMillis();
+                    timeHandler.sendEmptyMessageDelayed(LINGYALI_WHAT, DEFAULT_INTERVAL);
+                } else if (MotionEvent.ACTION_UP == action) {
+                    timeHandler.removeMessages(LINGYALI_WHAT);
+                    if (isShortClick()) {
+                        // 短按
+                        setTopIconAndTitle(R.mipmap.ic_lingyali_da,R.string.lingyali);
+                        if (lingyaliView.isSelected()) {
+                            sendBlueCmd("FF FF FF FF 05 00 00 91 09 7A 96");
+                        } else {
+                            sendBlueCmd("FF FF FF FF 05 00 00 00 09 17 06");
+                        }
+                    }
+                }
+                break;
+            case R.id.view_zhihan:
+                setTopIconAndTitle(R.mipmap.ic_zhihan_da,R.string.zhihan);
+                if (MotionEvent.ACTION_DOWN == action) {
+                    eventDownTime = System.currentTimeMillis();
+                    timeHandler.sendEmptyMessageDelayed(ZHIHAN_WHAT, DEFAULT_INTERVAL);
+                } else if (MotionEvent.ACTION_UP == action) {
+                    timeHandler.removeMessages(ZHIHAN_WHAT);
+                    if (isShortClick()) {
+                        // 短按
+                        setTopIconAndTitle(R.mipmap.ic_zhihan_da,R.string.zhihan);
+                        if (zhihanView.isSelected()) {
+                            sendBlueCmd("FF FF FF FF 05 00 00 F1 0F D2 94");
+                        } else {
+                            sendBlueCmd("FF FF FF FF 05 00 00 00 0F 97 04");
+                        }
+                    }
+                }
+                break;
+        }
+        return true;
+    }
+
+
+    private static final int JIYI1_WHAT = 1;
+    private static final int JIYI2_WHAT = 2;
+    private static final int KANDIANSHI_WHAT = 3;
+    private static final int LINGYALI_WHAT = 4;
+    private static final int ZHIHAN_WHAT = 5;
+
+    /**
+     * 记忆1 1
+     * 记忆2  2
+     * 看电视 3
+     * 零压力 4
+     * 止鼾 5
+     */
+    private Handler timeHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case JIYI1_WHAT:
+                    jiyi1LongClick();
+                    break;
+                case JIYI2_WHAT:
+                    jiyi2LongClick();
+                    break;
+                case KANDIANSHI_WHAT:
+                    kandianshiLongClick();
+                    break;
+                case LINGYALI_WHAT:
+                    lingyaliLongClick();
+                    break;
+                case ZHIHAN_WHAT:
+                    zhihanLongClick();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+
+
+    private void zhihanLongClick() {
+        if (zhihanView.isSelected()) {
+            // 有记忆
+            sendBlueCmd("FF FF FF FF 05 00 00 FF 0F D6 F4");
+        } else {
+            sendBlueCmd("FF FF FF FF 05 00 00 F0 0F D3 04");
+        }
+    }
+
+    private void kandianshiLongClick() {
+        if (kandianshiView.isSelected()) {
+            // 有记忆
+            sendBlueCmd("FF FF FF FF 05 00 00 5F 05 2E F3");
+        } else {
+            sendBlueCmd("FF FF FF FF 05 00 00 50 05 2B 03");
+        }
+    }
+
+
+    public boolean isShortClick() {
+        long endTime = System.currentTimeMillis();
+        if (getInterval(eventDownTime, endTime) < 2000) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isLongClick() {
+        long endTime = System.currentTimeMillis();
+        if (getInterval(eventDownTime, endTime) >= 2000) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 单位是毫秒
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    private long getInterval(long startTime,long endTime) {
+        long interval = endTime - startTime;
+        return interval;
+    }
 }

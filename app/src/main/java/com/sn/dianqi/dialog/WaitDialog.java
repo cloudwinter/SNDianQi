@@ -82,6 +82,11 @@ public class WaitDialog extends Dialog {
         image.startAnimation(animation);
     }
 
+    @Override
+    public void cancel() {
+        super.cancel();
+    }
+
     public void dismiss() {
         if (isShowing()) {
             super.dismiss();
@@ -93,4 +98,5 @@ public class WaitDialog extends Dialog {
     public boolean isCanceled() {
         return isCanceled;
     }
+
 }

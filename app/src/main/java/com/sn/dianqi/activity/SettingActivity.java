@@ -92,12 +92,22 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
             tvLanguage.setText(R.string.chinese);
         }
 
+//        if (Prefer.getInstance().isBleConnected()) {
+//            tvConnect.setText(R.string.connected);
+//        } else {
+//            tvConnect.setText(R.string.not_connected);
+//        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (Prefer.getInstance().isBleConnected()) {
             tvConnect.setText(R.string.connected);
         } else {
             tvConnect.setText(R.string.not_connected);
         }
-
     }
 
     @Override

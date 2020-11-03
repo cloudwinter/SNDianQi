@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -43,6 +44,8 @@ import net.frakbot.jumpingbeans.JumpingBeans;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -97,8 +100,6 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
     private ConnectHandler mConnectHandler;
 
-    // 点击选中的设备
-//    private BluetoothDevice mSelectedBlueDevice;
     private DeviceBean mSelectedDeviceBean;
 
     // 当前搜索状态
@@ -125,7 +126,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
     @Override
     protected void onDestroy() {
-        LogUtils.e(TAG,"执行ConnectActivity onDestroy方法");
+        LogUtils.e(TAG, "执行ConnectActivity onDestroy方法");
         unregisterReceiver(mGattUpdateReceiver);
         unbindService(mServiceConnection);
         super.onDestroy();
@@ -215,7 +216,14 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
         // 根据蓝牙地址，连接设备
         LogUtils.e(TAG, "==根据蓝牙地址，连接设备==", "开始连接目标设备");
         //启动连接动画
-        mWaitDialog.setCanceledOnTouchOutside(false);
+        mWaitDialog.setCanceledOnTouchOutside(true);
+        mWaitDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                LogUtils.e(TAG, "mWaitDialog 执行 onCancel");
+                mBluetoothLeService.close();
+            }
+        });
         mWaitDialog.show();
         if (isConnected()) {
             mBluetoothLeService.disconnect();
@@ -268,10 +276,13 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     activity.mBlueDeviceListAdapter.notifyDataSetChanged();
                     break;
                 case MSG_GATT_SERVICE_DISCOVERY:
-                    if (activity.mSelectedDeviceBean.isConnected()) {
-                        Intent intent = new Intent(activity, HomeActivity.class);
-                        activity.startActivity(intent);
-                        activity.finish();
+                    if (activity.mFrom.equals("main")) {
+                        // 只有首页过来才跳转
+                        if (activity.mSelectedDeviceBean.isConnected()) {
+                            Intent intent = new Intent(activity, HomeActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        }
                     }
                     break;
             }
@@ -282,7 +293,6 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            mSelectedBlueDevice = mBlueDeviceListAdapter.getDevice(position);
             mSelectedDeviceBean = (DeviceBean) mBlueDeviceListAdapter.getItem(position);
             if (mSelectedDeviceBean.isConnected()) {
                 // 断开连接
@@ -317,7 +327,6 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-            LogUtils.i(TAG, "搜索到蓝牙设备信息：" + new Gson().toJson(device));
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -330,18 +339,19 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 //                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
 //                            return;
 //                        }
-
+                        LogUtils.i(TAG, "搜索到蓝牙设备信息：" + device.getName());
                         String latelyConnectedDevice = Prefer.getInstance().getLatelyConnectedDevice();
                         if (device.getAddress().equals(latelyConnectedDevice)) {
-                            if (("main").equals(mFrom) && isFirstScan ) {
+                            if (("main").equals(mFrom) && isFirstScan) {
                                 // 如果是从首页第一次进入，并且扫描到之前连接过的设备，则自动连接
-//                                mSelectedBlueDevice = device;
-                                mSelectedDeviceBean = mBlueDeviceListAdapter.addDevice(device,false);
-                                connect();
-                                return;
+                                mSelectedDeviceBean = mBlueDeviceListAdapter.addDevice(device, false);
+                                if (mSelectedDeviceBean != null) {
+                                    connect();
+                                    return;
+                                }
                             }
                         }
-                        mBlueDeviceListAdapter.addDevice(device,false);
+                        mBlueDeviceListAdapter.addDevice(device, false);
                     }
                 }
             });
@@ -351,8 +361,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
     private boolean isConnected() {
         BluetoothLeService bluetoothLeService = MyApplication.getInstance().mBluetoothLeService;
-        if (bluetoothLeService != null && MyApplication.getInstance().gattCharacteristic != null
-                && Prefer.getInstance().isBleConnected()) {
+        if (bluetoothLeService != null && Prefer.getInstance().isBleConnected()) {
             return true;
         }
         return false;
@@ -404,29 +413,28 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 //更新连接状态
                 mSelectedDeviceBean.setConnected(true);
                 Prefer.getInstance().setLatelyConnectedDevice(mSelectedDeviceBean.getAddress());
-                Prefer.getInstance().setBleStatus("已连接",mSelectedDeviceBean);
+                Prefer.getInstance().setBleStatus("已连接", mSelectedDeviceBean);
                 mWaitDialog.dismiss();
                 mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
-                // FIXME 测试时使用，连接真实蓝牙时去除
-//                mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) { //Gatt连接失败
                 mWaitDialog.dismiss();
-                if (mSelectedDeviceBean != null && mSelectedDeviceBean.isConnected()) {
-                    LogUtils.e(TAG, "==更新连接状态 断开连接==");
-                    ToastUtils.showToast(ConnectActivity.this, "已断开连接");
-                    Prefer.getInstance().setLatelyConnectedDevice("");
-                    Prefer.getInstance().setBleStatus("未连接",null);
-                    mSelectedDeviceBean.setConnected(false);
-                    mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
-                } else {
-                    LogUtils.e(TAG, "==更新连接状态 连接失败==");
-                    showDialog(getString(R.string.connected_failed), "", getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // do nothing
+
+                List<DeviceBean> list = mBlueDeviceListAdapter.getDeviceList();
+                if (list != null && !list.isEmpty()) {
+                    for (DeviceBean deviceBean : list) {
+                        deviceBean.setConnected(false);
+                        if (mSelectedDeviceBean != null && mSelectedDeviceBean.getAddress().equals(deviceBean.getAddress())) {
+                            mSelectedDeviceBean = deviceBean;
                         }
-                    });
+                    }
+                    mBlueDeviceListAdapter.notifyDataSetChanged();
                 }
+                LogUtils.e(TAG, "==更新连接状态 断开连接==");
+                //ToastUtils.showToast(ConnectActivity.this, "已断开连接");
+                Prefer.getInstance().setLatelyConnectedDevice("");
+                Prefer.getInstance().setBleStatus("未连接", null);
+//                mSelectedDeviceBean.setConnected(false);
+//                mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //发现GATT服务器
                 // Show all the supported services and characteristics on the
                 // user interface.

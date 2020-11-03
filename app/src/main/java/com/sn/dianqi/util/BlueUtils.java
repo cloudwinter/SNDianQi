@@ -1,5 +1,7 @@
 package com.sn.dianqi.util;
 
+import android.text.TextUtils;
+
 public class BlueUtils {
 
     /**
@@ -61,5 +63,23 @@ public class BlueUtils {
             retData[i / 2] = (byte) int_ch;//将转化后的数放入Byte里
         }
         return retData;
+    }
+
+    /**
+     * 转义蓝牙名称
+     * @param oriBlueName
+     * @return
+     */
+    public static String transferBlueName(String oriBlueName){
+        if (TextUtils.isEmpty(oriBlueName)) {
+            return null;
+        }
+        oriBlueName = oriBlueName.replace("<","C");
+        oriBlueName = oriBlueName.replace(":","A");
+        oriBlueName = oriBlueName.replace(";","B");
+        oriBlueName = oriBlueName.replace("=","D");
+        oriBlueName = oriBlueName.replace(">","E");
+        oriBlueName = oriBlueName.replace("?","F");
+        return oriBlueName;
     }
 }

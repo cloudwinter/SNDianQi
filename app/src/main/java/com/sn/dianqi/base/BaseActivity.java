@@ -129,4 +129,13 @@ public class BaseActivity extends AppCompatActivity {
         //保存设置语言的类型
         //PreferenceUtil.commitString("language", language);
     }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
+    }
 }
