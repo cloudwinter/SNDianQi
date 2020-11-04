@@ -34,6 +34,7 @@ import com.sn.dianqi.base.BaseActivity;
 import com.sn.dianqi.bean.DeviceBean;
 import com.sn.dianqi.blue.BluetoothLeService;
 import com.sn.dianqi.dialog.WaitDialog;
+import com.sn.dianqi.util.BlueUtils;
 import com.sn.dianqi.util.CountDownTimerUtils;
 import com.sn.dianqi.util.LogUtils;
 import com.sn.dianqi.util.Prefer;
@@ -360,11 +361,7 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
 
     private boolean isConnected() {
-        BluetoothLeService bluetoothLeService = MyApplication.getInstance().mBluetoothLeService;
-        if (bluetoothLeService != null && Prefer.getInstance().isBleConnected()) {
-            return true;
-        }
-        return false;
+        return BlueUtils.isConnected();
     }
 
 
@@ -430,11 +427,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     mBlueDeviceListAdapter.notifyDataSetChanged();
                 }
                 LogUtils.e(TAG, "==更新连接状态 断开连接==");
-                //ToastUtils.showToast(ConnectActivity.this, "已断开连接");
                 Prefer.getInstance().setLatelyConnectedDevice("");
                 Prefer.getInstance().setBleStatus("未连接", null);
-//                mSelectedDeviceBean.setConnected(false);
-//                mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //发现GATT服务器
                 // Show all the supported services and characteristics on the
                 // user interface.

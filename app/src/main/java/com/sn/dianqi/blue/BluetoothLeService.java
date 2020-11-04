@@ -233,25 +233,45 @@ public class BluetoothLeService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        LogUtils.e("BluetoothLeService","BluetoothLeService 调用onCreate方法");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        LogUtils.e("BluetoothLeService","BluetoothLeService 调用onStartCommand方法");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
+        LogUtils.e("BluetoothLeService","BluetoothLeService 调用onBind方法");
         return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        LogUtils.e("BluetoothLeService 调用unbind方法");
+        LogUtils.e("BluetoothLeService","BluetoothLeService 调用unbind方法");
         //close();
         return super.onUnbind(intent);
     }
 
     @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        LogUtils.e("BluetoothLeService","BluetoothLeService 调用onTaskRemoved方法");
+        super.onTaskRemoved(rootIntent);
+    }
+
+    @Override
     public void onDestroy() {
-        super.onDestroy();
+        LogUtils.e("BluetoothLeService","BluetoothLeService 调用onDestroy方法");
         // 断开连接
         disconnect();
         // 关闭
         close();
         Prefer.getInstance().setBleStatus("未连接",null);
+        super.onDestroy();
     }
 
     private final IBinder mBinder = new LocalBinder();

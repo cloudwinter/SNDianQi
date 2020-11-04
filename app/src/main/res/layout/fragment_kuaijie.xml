@@ -51,7 +51,7 @@
     <!-- 记忆区域 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/jiyi_height"
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_marginLeft="@dimen/jiyi_margin_sides"
@@ -91,7 +91,7 @@
     <!-- 以下按键区域-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="102dp"
+        android:layout_height="@dimen/anjian_yuan_size"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="@dimen/anjian_margin_sides"
         android:layout_marginRight="@dimen/anjian_margin_sides"
@@ -128,7 +128,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="102dp"
+        android:layout_height="@dimen/anjian_yuan_size"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="@dimen/anjian_margin_sides"
         android:layout_marginRight="@dimen/anjian_margin_sides"

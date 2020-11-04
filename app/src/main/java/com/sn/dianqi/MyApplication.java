@@ -71,23 +71,26 @@ public class MyApplication extends Application {
         return instance;
     }
 
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        LogUtils.e("---", "[MyApplication] onLowMemory");
+    }
 
     @Override
     public void onTerminate() {
         LogUtils.e("---", "[MyApplication] onTerminate");
         super.onTerminate();
-        if (Prefer.getInstance().isBleConnected()) {
-            MyApplication.getInstance().mBluetoothLeService.disconnect();
-            Prefer.getInstance().setBleStatus("未连接",null);
-        }
     }
 
     @Override
     public void onTrimMemory(int level) {
         LogUtils.e("---", "[MyApplication] onTrimMemory level:"+level);
         if (Prefer.getInstance().isBleConnected()) {
-            MyApplication.getInstance().mBluetoothLeService.disconnect();
             Prefer.getInstance().setBleStatus("未连接",null);
+            if (mBluetoothLeService != null) {
+                mBluetoothLeService.disconnect();
+            }
         }
         super.onTrimMemory(level);
     }

@@ -2,7 +2,24 @@ package com.sn.dianqi.util;
 
 import android.text.TextUtils;
 
+import com.sn.dianqi.MyApplication;
+import com.sn.dianqi.blue.BluetoothLeService;
+
 public class BlueUtils {
+
+
+    /**
+     * 判断蓝牙是否已连接
+     * @return
+     */
+    public static boolean isConnected() {
+        BluetoothLeService bluetoothLeService = MyApplication.getInstance().mBluetoothLeService;
+        if (bluetoothLeService != null && MyApplication.getInstance().gattCharacteristic != null
+                && Prefer.getInstance().isBleConnected()) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * desc:将数组转为16进制

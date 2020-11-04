@@ -90,7 +90,7 @@ public class DengguangFragment extends BaseFragment implements View.OnClickListe
         cmd = cmd.replace(" ", "");
         Log.i(TAG, "sendBlueCmd: " + cmd);
         // 判断蓝牙是否连接
-        if (!Prefer.getInstance().isBleConnected()) {
+        if (!BlueUtils.isConnected()) {
             ToastUtils.showToast(getContext(), getString(R.string.device_no_connected));
             LogUtils.i(TAG, "sendBlueCmd -> 蓝牙未连接");
             return;

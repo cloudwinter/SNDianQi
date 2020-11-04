@@ -108,7 +108,7 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
         kandianshiView.setOnTouchListener(this);
         lingyaliView.setOnTouchListener(this);
         zhihanView.setOnTouchListener(this);
-        fuyuanView.setOnClickListener(this);
+        fuyuanView.setOnTouchListener(this);
     }
 
     /**
@@ -169,7 +169,7 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
         cmd = cmd.replace(" ", "");
         Log.i(TAG, "sendBlueCmd: " + cmd);
         // 判断蓝牙是否连接
-        if (!Prefer.getInstance().isBleConnected()) {
+        if (!BlueUtils.isConnected()) {
             ToastUtils.showToast(getContext(), getString(R.string.device_no_connected));
             LogUtils.i(TAG, "sendBlueCmd -> 蓝牙未连接");
             return;
@@ -214,12 +214,12 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.view_fuyuan:
-                setTopIconAndTitle(R.mipmap.ic_fuyuan_da,R.string.fuyuan);
-                sendBlueCmd("FF FF FF FF 05 00 00 00 08 D6 C6");
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.view_fuyuan:
+//                setTopIconAndTitle(R.mipmap.ic_fuyuan_da,R.string.fuyuan);
+//                sendBlueCmd("FF FF FF FF 05 00 00 00 08 D6 C6");
+//                break;
+//        }
     }
 
 
@@ -408,6 +408,12 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
                             sendBlueCmd("FF FF FF FF 05 00 00 00 0F 97 04");
                         }
                     }
+                }
+                break;
+            case R.id.view_fuyuan:
+                setTopIconAndTitle(R.mipmap.ic_fuyuan_da,R.string.fuyuan);
+                if (MotionEvent.ACTION_DOWN == action) {
+                    sendBlueCmd("FF FF FF FF 05 00 00 00 08 D6 C6");
                 }
                 break;
         }

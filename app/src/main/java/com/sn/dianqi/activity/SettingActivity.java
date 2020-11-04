@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sn.dianqi.R;
 import com.sn.dianqi.base.BaseActivity;
 import com.sn.dianqi.dialog.LanguageDialog;
+import com.sn.dianqi.util.BlueUtils;
 import com.sn.dianqi.view.LoggerView;
 import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.view.TranslucentActionBar;
@@ -103,7 +104,7 @@ public class SettingActivity extends BaseActivity implements TranslucentActionBa
     @Override
     protected void onResume() {
         super.onResume();
-        if (Prefer.getInstance().isBleConnected()) {
+        if (BlueUtils.isConnected()) {
             tvConnect.setText(R.string.connected);
         } else {
             tvConnect.setText(R.string.not_connected);
