@@ -431,6 +431,7 @@
     <dimen name="jiyi_height">60dp</dimen>
     <dimen name="jiyi_icon_left">22dp</dimen>
     <dimen name="jiyi_title_left">30dp</dimen>
+    <dimen name="jiyi_middle">10dp</dimen>
 
     <dimen name="anjian_margin_sides">69dp</dimen>
     <dimen name="anjian_yuan_size">102dp</dimen>

@@ -1,12 +1,15 @@
 package com.sn.dianqi.activity;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -14,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sn.dianqi.MyApplication;
 import com.sn.dianqi.R;
 import com.sn.dianqi.adapter.TabPagerAdapter;
 import com.sn.dianqi.base.BaseActivity;
@@ -114,6 +118,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mGattUpdateReceiver);
+        unbindService(mServiceConnection);
     }
 
     @Override
@@ -129,6 +134,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         actionBar.setStatusBarHeight(getStatusBarHeight());
         initView();
         setCurrentTab(1);
+
+        // 启动蓝牙service
+        Intent blueServiceIntent = new Intent(HomeActivity.this, BluetoothLeService.class);
+        startService(blueServiceIntent);
+        bindService(blueServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
 
@@ -222,6 +232,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 Prefer.getInstance().setBleStatus("未连接",null);
                 ToastUtils.showToast(HomeActivity.this,R.string.device_disconnect);
             }
+        }
+    };
+
+
+
+    /* BluetoothLeService绑定的回调函数 */
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            LogUtils.d(TAG, "BluetoothLeService 已绑定 HomeActivity");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            LogUtils.i(TAG, "BluetoothLeService 已断开");
         }
     };
 }

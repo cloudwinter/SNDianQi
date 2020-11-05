@@ -86,12 +86,12 @@ public class MyApplication extends Application {
     @Override
     public void onTrimMemory(int level) {
         LogUtils.e("---", "[MyApplication] onTrimMemory level:"+level);
-        if (Prefer.getInstance().isBleConnected()) {
-            Prefer.getInstance().setBleStatus("未连接",null);
-            if (mBluetoothLeService != null) {
-                mBluetoothLeService.disconnect();
-            }
-        }
+//        if (TRIM_MEMORY_COMPLETE == level && Prefer.getInstance().isBleConnected()) {
+//            Prefer.getInstance().setBleStatus("未连接",null);
+//            if (mBluetoothLeService != null) {
+//                mBluetoothLeService.disconnect();
+//            }
+//        }
         super.onTrimMemory(level);
     }
 

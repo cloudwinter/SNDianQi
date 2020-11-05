@@ -80,9 +80,6 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: ");
-        getActivity().registerReceiver(mKuaijieReceiver, makeGattUpdateIntentFilter());
-        characteristic = MyApplication.getInstance().gattCharacteristic;
-        askStatus();
     }
 
     @Nullable
@@ -99,6 +96,10 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
         });
         ButterKnife.bind(this, view);
         initView();
+
+        getActivity().registerReceiver(mKuaijieReceiver, makeGattUpdateIntentFilter());
+        characteristic = MyApplication.getInstance().gattCharacteristic;
+        askStatus();
         return view;
     }
 
@@ -173,6 +174,9 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
             ToastUtils.showToast(getContext(), getString(R.string.device_no_connected));
             LogUtils.i(TAG, "sendBlueCmd -> 蓝牙未连接");
             return;
+        }
+        if (characteristic == null) {
+            characteristic = MyApplication.getInstance().gattCharacteristic;
         }
         if (characteristic == null) {
             LogUtils.i(TAG, "sendBlueCmd -> 特征值未获取到");
@@ -327,9 +331,7 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
                 if (MotionEvent.ACTION_DOWN == action) {
                     eventDownTime = System.currentTimeMillis();
                     timeHandler.sendEmptyMessageDelayed(JIYI1_WHAT, DEFAULT_INTERVAL);
-                    if (jiyi1View.isSelected()) {
-                        setTitle(R.string.jiyi1);
-                    }
+                    setTitle(R.string.jiyi1);
                 } else if (MotionEvent.ACTION_UP == action) {
                     timeHandler.removeMessages(JIYI1_WHAT);
                     if (isShortClick()) {
@@ -344,9 +346,7 @@ public class KuaijieFragment extends BaseFragment implements View.OnClickListene
                 if (MotionEvent.ACTION_DOWN == action) {
                     eventDownTime = System.currentTimeMillis();
                     timeHandler.sendEmptyMessageDelayed(JIYI2_WHAT, DEFAULT_INTERVAL);
-                    if (jiyi1View.isSelected()) {
-                        setTitle(R.string.jiyi2);
-                    }
+                    setTitle(R.string.jiyi2);
                 } else if (MotionEvent.ACTION_UP == action) {
                     timeHandler.removeMessages(JIYI2_WHAT);
                     if (isShortClick()) {

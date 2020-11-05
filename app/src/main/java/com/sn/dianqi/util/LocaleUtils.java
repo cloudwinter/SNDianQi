@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.Display;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 /**
@@ -117,4 +119,24 @@ public class LocaleUtils {
     public static boolean needUpdateLocale(Context pContext, Locale pNewUserLocale) {
         return pNewUserLocale != null && !getCurrentLocale(pContext).equals(pNewUserLocale);
     }
+
+
+    /**
+           * 获取手机出厂时默认的densityDpi
+         */
+   public static int getDefaultDisplayDensity() {
+       try {
+                         Class aClass = Class.forName("android.view.WindowManagerGlobal");
+                         Method method = aClass.getMethod("getWindowManagerService");
+                       method.setAccessible(true);
+                        Object iwm = method.invoke(aClass);
+                        Method getInitialDisplayDensity = iwm.getClass().getMethod("getInitialDisplayDensity", int.class);
+                        getInitialDisplayDensity.setAccessible(true);
+                        Object densityDpi = getInitialDisplayDensity.invoke(iwm, Display.DEFAULT_DISPLAY);
+                       return (int) densityDpi;
+                    } catch (Exception e) {
+                         e.printStackTrace();
+                        return -1;
+                     }
+            }
 }

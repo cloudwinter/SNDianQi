@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.sn.dianqi.MyApplication;
 import com.sn.dianqi.common.Constants;
+import com.sn.dianqi.util.LocaleUtils;
 import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.util.PreferenceUtil;
 
@@ -124,10 +125,14 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             config.locale = Locale.SIMPLIFIED_CHINESE;
         }
+        if (resources.getConfiguration().fontScale != 1) {
+            config.fontScale = 1.0f;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            config.densityDpi = LocaleUtils.getDefaultDisplayDensity();
+        }
         resources.updateConfiguration(config, dm);
 
-        //保存设置语言的类型
-        //PreferenceUtil.commitString("language", language);
     }
 
 //    @Override
