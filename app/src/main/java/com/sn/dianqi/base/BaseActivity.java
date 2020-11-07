@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.sn.dianqi.MyApplication;
 import com.sn.dianqi.common.Constants;
 import com.sn.dianqi.util.LocaleUtils;
+import com.sn.dianqi.util.LogUtils;
 import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.util.PreferenceUtil;
 
@@ -38,6 +39,7 @@ public class BaseActivity extends AppCompatActivity {
         PreferenceUtil.init(this);
         //根据上次的语言设置，重新设置语言
         switchLanguage(Prefer.getInstance().getSelectedLanguage());
+        LogUtils.d("BaseActivity","当前系统的版本为："+Build.VERSION.SDK_INT);
     }
 
     @Override

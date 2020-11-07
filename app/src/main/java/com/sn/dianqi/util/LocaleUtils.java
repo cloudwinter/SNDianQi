@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 
 import com.google.gson.Gson;
@@ -17,6 +18,9 @@ import java.util.Locale;
  */
 
 public class LocaleUtils {
+
+    private final static String TAG = "LocaleUtils";
+
     /**
      * 中文
      */
@@ -126,17 +130,18 @@ public class LocaleUtils {
          */
    public static int getDefaultDisplayDensity() {
        try {
-                         Class aClass = Class.forName("android.view.WindowManagerGlobal");
-                         Method method = aClass.getMethod("getWindowManagerService");
-                       method.setAccessible(true);
-                        Object iwm = method.invoke(aClass);
-                        Method getInitialDisplayDensity = iwm.getClass().getMethod("getInitialDisplayDensity", int.class);
-                        getInitialDisplayDensity.setAccessible(true);
-                        Object densityDpi = getInitialDisplayDensity.invoke(iwm, Display.DEFAULT_DISPLAY);
-                       return (int) densityDpi;
-                    } catch (Exception e) {
-                         e.printStackTrace();
-                        return -1;
-                     }
-            }
+             Class aClass = Class.forName("android.view.WindowManagerGlobal");
+             Method method = aClass.getMethod("getWindowManagerService");
+             method.setAccessible(true);
+             Object iwm = method.invoke(aClass);
+             Method getInitialDisplayDensity = iwm.getClass().getMethod("getInitialDisplayDensity", int.class);
+             getInitialDisplayDensity.setAccessible(true);
+             Object densityDpi = getInitialDisplayDensity.invoke(iwm, Display.DEFAULT_DISPLAY);
+             return (int) densityDpi;
+       } catch (Exception e) {
+           Log.e(TAG, "getDefaultDisplayDensity: ",e );
+           e.printStackTrace();
+           return -1;
+       }
+   }
 }

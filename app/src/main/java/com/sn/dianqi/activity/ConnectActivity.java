@@ -105,6 +105,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
 
     // 当前搜索状态
     private boolean mScanning;
+    // 是否是连接前断开中
+    private boolean isPreConnectDisconnecting = false;
 
 
     @Override
@@ -201,10 +203,12 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
             }
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
-            LogUtils.e(TAG, "==停止扫描蓝牙设备==", "stoping................");
-            mScanning = false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            textViewTry.setText(getString(R.string.search_blue_equipment));
+            if (mScanning) {
+                LogUtils.e(TAG, "==停止扫描蓝牙设备==", "stoping................");
+                mScanning = false;
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                textViewTry.setText(getString(R.string.search_blue_equipment));
+            }
         }
     }
 
@@ -214,6 +218,8 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
     private void connect() {
         // Automatically connects to the device upon successful start-up
         // initialization.
+        // 先停止搜索蓝牙
+        scanBlue(false);
         // 根据蓝牙地址，连接设备
         LogUtils.e(TAG, "==根据蓝牙地址，连接设备==", "开始连接目标设备");
         //启动连接动画
@@ -228,9 +234,12 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
         mWaitDialog.show();
         if (isConnected()) {
             mBluetoothLeService.disconnect();
+            isPreConnectDisconnecting = true;
+        } else {
+            mBluetoothLeService.close();
+            mBluetoothLeService.connect(mSelectedDeviceBean.getAddress());
         }
-        mBluetoothLeService.connect(mSelectedDeviceBean.getAddress());
-        scanBlue(false);
+
     }
 
 
@@ -411,11 +420,11 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                 mSelectedDeviceBean.setConnected(true);
                 Prefer.getInstance().setLatelyConnectedDevice(mSelectedDeviceBean.getAddress());
                 Prefer.getInstance().setBleStatus("已连接", mSelectedDeviceBean);
-                mWaitDialog.dismiss();
+//                mWaitDialog.dismiss();
                 mConnectHandler.sendEmptyMessage(MSG_CONNECT_STATUS);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) { //Gatt连接失败
-                mWaitDialog.dismiss();
-
+                boolean closeDialog = true;
+                mBluetoothLeService.close();
                 List<DeviceBean> list = mBlueDeviceListAdapter.getDeviceList();
                 if (list != null && !list.isEmpty()) {
                     for (DeviceBean deviceBean : list) {
@@ -426,12 +435,26 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     }
                     mBlueDeviceListAdapter.notifyDataSetChanged();
                 }
+                String address  = Prefer.getInstance().getLatelyConnectedDevice();
                 LogUtils.e(TAG, "==更新连接状态 断开连接==");
                 Prefer.getInstance().setLatelyConnectedDevice("");
                 Prefer.getInstance().setBleStatus("未连接", null);
+                if (isPreConnectDisconnecting) {
+                    // 成功断开后连接
+                    isPreConnectDisconnecting = false;
+                    if (mSelectedDeviceBean != null &&  !mSelectedDeviceBean.getAddress().equals(address)) {
+                        // 如果当前选中的和当前连接的不是同一个,重新发起连接
+                        mBluetoothLeService.connect(mSelectedDeviceBean.getAddress());
+                        closeDialog = false;
+                    }
+                }
+                if (closeDialog) {
+                    mWaitDialog.dismiss();
+                }
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) { //发现GATT服务器
                 // Show all the supported services and characteristics on the
                 // user interface.
+                mWaitDialog.dismiss();
                 LogUtils.i("==获取设备的所有蓝牙服务==", "" + mBluetoothLeService.getSupportedGattServices());
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
                 mConnectHandler.sendEmptyMessage(MSG_GATT_SERVICE_DISCOVERY);
