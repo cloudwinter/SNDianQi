@@ -346,9 +346,9 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                         if (TextUtils.isEmpty(deviceName)) {
                             return;
                         }
-//                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
-//                            return;
-//                        }
+                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
+                            return;
+                        }
                         LogUtils.i(TAG, "搜索到蓝牙设备信息：" + device.getName());
                         String latelyConnectedDevice = Prefer.getInstance().getLatelyConnectedDevice();
                         if (device.getAddress().equals(latelyConnectedDevice)) {
