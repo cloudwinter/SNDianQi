@@ -71,6 +71,7 @@ public class MyApplication extends Application {
         return instance;
     }
 
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();
@@ -107,6 +108,7 @@ public class MyApplication extends Application {
 //        res.updateConfiguration(config, res.getDisplayMetrics());
 
         instance = this;
+        RunningContext.init(this);
         AppUncaughtExceptionHandler.getInstance().init(this);
         initImageLoader();
         initFilePath();

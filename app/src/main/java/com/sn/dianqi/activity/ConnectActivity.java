@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.sn.dianqi.MyApplication;
 import com.sn.dianqi.R;
+import com.sn.dianqi.RunningContext;
 import com.sn.dianqi.adapter.BlueDeviceListAdapter;
 import com.sn.dianqi.base.BaseActivity;
 import com.sn.dianqi.bean.DeviceBean;
@@ -201,7 +202,9 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     mBlueDeviceListAdapter.addDevice(deviceBean);
                 }
             }
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            if (RunningContext.checkLocationPermission(ConnectActivity.this, true)) {
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+            }
         } else {
             if (mScanning) {
                 LogUtils.e(TAG, "==停止扫描蓝牙设备==", "stoping................");
