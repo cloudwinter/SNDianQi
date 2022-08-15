@@ -34,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 快捷
+ * 快捷(K2)
  */
 public class KuaijieFragment extends BaseFragment implements View.OnClickListener,View.OnTouchListener {
 

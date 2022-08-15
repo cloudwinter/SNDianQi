@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 微调
+ * 微调（W4）
  */
 public class WeitiaoFragment extends BaseFragment implements View.OnTouchListener {
 
