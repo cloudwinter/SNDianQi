@@ -28,7 +28,6 @@ import com.sn.dianqi.util.LogUtils;
 import com.sn.dianqi.view.LoggerView;
 import com.sn.dianqi.util.Prefer;
 import com.sn.dianqi.util.ScreenUtils;
-import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.xutils.x;
@@ -119,7 +118,7 @@ public class MyApplication extends Application {
         x.Ext.init(this);
 
         // 初始化Bugly
-        initBugly();
+//        initBugly();
 
         // 初始化LoggerView
         LoggerView.init(this);
@@ -249,7 +248,7 @@ public class MyApplication extends Application {
 
         CrashReport.initCrashReport(getApplicationContext(), "53df956f2f", true ,strategy);
 
-        Bugly.init(getApplicationContext(), "53df956f2f", false);
+//        Bugly.init(getApplicationContext(), "53df956f2f", false);
     }
 
 }
