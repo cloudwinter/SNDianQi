@@ -1,5 +1,7 @@
 package com.sn.dianqi.activity;
 
+import static com.sn.dianqi.MyApplication.HEART_RATE_MEASUREMENT;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -19,14 +21,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import androidx.annotation.Nullable;
+
 import com.sn.dianqi.MyApplication;
 import com.sn.dianqi.R;
 import com.sn.dianqi.RunningContext;
@@ -39,23 +41,17 @@ import com.sn.dianqi.util.BlueUtils;
 import com.sn.dianqi.util.CountDownTimerUtils;
 import com.sn.dianqi.util.LogUtils;
 import com.sn.dianqi.util.Prefer;
-import com.sn.dianqi.util.ToastUtils;
 import com.sn.dianqi.view.TranslucentActionBar;
 
 import net.frakbot.jumpingbeans.JumpingBeans;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sn.dianqi.MyApplication.HEART_RATE_MEASUREMENT;
 
 /**
  * 蓝牙搜索连接界面
@@ -343,28 +339,30 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (device != null) {
-                        // 发送给客户时需要加上
-                        String deviceName = device.getName();
-                        if (TextUtils.isEmpty(deviceName)) {
-                            return;
-                        }
-                        if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
-                            return;
-                        }
-                        LogUtils.i(TAG, "搜索到蓝牙设备信息：" + device.getName());
-                        String latelyConnectedDevice = Prefer.getInstance().getLatelyConnectedDevice();
-                        if (device.getAddress().equals(latelyConnectedDevice)) {
-                            if (("main").equals(mFrom) && isFirstScan) {
-                                // 如果是从首页第一次进入，并且扫描到之前连接过的设备，则自动连接
-                                mSelectedDeviceBean = mBlueDeviceListAdapter.addDevice(device, false);
-                                if (mSelectedDeviceBean != null) {
-                                    connect();
-                                    return;
+                    if (RunningContext.checkLocationPermission(ConnectActivity.this, true)) {
+                        if (device != null) {
+                            // 发送给客户时需要加上
+                            String deviceName = device.getName();
+                            if (TextUtils.isEmpty(deviceName)) {
+                                return;
+                            }
+                            if (!deviceName.contains("QMS2") && !deviceName.contains("QMS-MQ")) {
+                                return;
+                            }
+                            LogUtils.i(TAG, "搜索到蓝牙设备信息：" + device.getName());
+                            String latelyConnectedDevice = Prefer.getInstance().getLatelyConnectedDevice();
+                            if (device.getAddress().equals(latelyConnectedDevice)) {
+                                if (("main").equals(mFrom) && isFirstScan) {
+                                    // 如果是从首页第一次进入，并且扫描到之前连接过的设备，则自动连接
+                                    mSelectedDeviceBean = mBlueDeviceListAdapter.addDevice(device, false);
+                                    if (mSelectedDeviceBean != null) {
+                                        connect();
+                                        return;
+                                    }
                                 }
                             }
+                            mBlueDeviceListAdapter.addDevice(device, false);
                         }
-                        mBlueDeviceListAdapter.addDevice(device, false);
                     }
                 }
             });
@@ -438,14 +436,14 @@ public class ConnectActivity extends BaseActivity implements TranslucentActionBa
                     }
                     mBlueDeviceListAdapter.notifyDataSetChanged();
                 }
-                String address  = Prefer.getInstance().getLatelyConnectedDevice();
+                String address = Prefer.getInstance().getLatelyConnectedDevice();
                 LogUtils.e(TAG, "==更新连接状态 断开连接==");
                 Prefer.getInstance().setLatelyConnectedDevice("");
                 Prefer.getInstance().setBleStatus("未连接", null);
                 if (isPreConnectDisconnecting) {
                     // 成功断开后连接
                     isPreConnectDisconnecting = false;
-                    if (mSelectedDeviceBean != null &&  !mSelectedDeviceBean.getAddress().equals(address)) {
+                    if (mSelectedDeviceBean != null && !mSelectedDeviceBean.getAddress().equals(address)) {
                         // 如果当前选中的和当前连接的不是同一个,重新发起连接
                         mBluetoothLeService.connect(mSelectedDeviceBean.getAddress());
                         closeDialog = false;
