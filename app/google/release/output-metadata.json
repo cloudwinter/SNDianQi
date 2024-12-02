@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.sn.dianqi",
+  "variantName": "googleRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 6,
+      "versionName": "1.0.5",
+      "outputFile": "../../../realease/SweetNight1.0.5_2024-04-03_google.apk"
+    }
+  ],
+  "elementType": "File"
+}
